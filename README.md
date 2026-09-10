@@ -1,4 +1,103 @@
-# Fusion — 毫米波雷达与视觉融合的目标检测系统
+# Radar-Camera Fusion
+
+**English** | [中文](#中文说明)
+
+A radar–camera fusion system for object detection and velocity estimation.
+YOLOv8 handles visual detection and tracking, while a mmWave radar supplies each
+target's range and velocity. Radar points are projected onto the image plane with
+the camera calibration and matched to the detection boxes by nearest neighbour,
+so every box can be annotated with the radar-measured velocity.
+
+## Repository layout
+
+```
+F:\Radar-Camera-Fusion\
+├─ run.bat              one-click launcher (activates the conda env and starts the app)
+├─ README.md            this file
+├─ .gitignore
+├─ src\                 source code
+│   ├─ detect.py        main app (PyQt5 UI: video, radar scatter plot, control and calibration panels)
+│   ├─ Camera.py        camera thread, YOLOv8 detection/tracking, projection + fusion, camera calibration
+│   ├─ Radar.py         radar thread (polls targets from the CAN channel on a timer)
+│   ├─ zlgcan.py        ZLG CAN driver wrapper (ctypes)
+│   └─ paths.py         single source of truth for every path in the project
+├─ driver\              ZLG CAN driver (keep together, do not split)
+│   ├─ zlgcan.dll
+│   ├─ kerneldlls\      driver kernel libraries, must stay in the same folder as zlgcan.dll
+│   └─ dev_info.json    device types / channels / baud rate table
+├─ models\              YOLO weights
+│   └─ yolov8n.pt
+├─ config\              calibration parameters
+│   └─ calibration_data.json    intrinsics, distortion, radar-camera extrinsics R/tvec
+├─ tools\               utilities
+│   ├─ check_env.py     environment and path self-check
+│   └─ zlgcan_demo.py   ZLG's official CAN demo GUI (test the CAN box without the camera)
+├─ env\                 environment docs and dependency list
+│   └─ requirements.txt
+├─ data\                data (hymenoptera_data is the YOLO tutorial dataset, safe to delete)
+├─ outputs\             runtime artefacts: logs\ (training logs), runs\ (inference output)
+├─ docs\                documents
+└─ archive\             non-essential: ultralytics-main source, old PyCharm config, old caches
+```
+
+## Environment
+
+A conda environment named `fusion` is already set up on this machine
+(`F:\anaconda3\envs\fusion`, Python 3.10.21, 64-bit). See [env/README.md](env/README.md)
+for the install steps, version constraints and the commands needed to rebuild it from scratch.
+
+Two hard requirements:
+
+- a **64-bit** Python, because `driver\zlgcan.dll` is x64;
+- **torch pinned to 2.5.x** — ultralytics 8.2.40 is incompatible with torch ≥ 2.6.
+
+## Running
+
+Double-click `run.bat`, or:
+
+```
+conda activate fusion
+cd /d F:\Radar-Camera-Fusion
+python src\detect.py
+```
+
+Run the self-check first if you want to verify the setup (it checks dependencies, GPU,
+driver, model and calibration file):
+
+```
+python tools\check_env.py
+```
+
+## Hardware and workflow
+
+- Camera: a USB webcam, index 0 in the code. Radar: a ZLG USBCANFD-series CAN box.
+- In the UI: pick the device type and channel → open the device → start detection. The
+  camera view is overlaid with detection boxes and radar velocities, and the radar point
+  cloud is plotted on the right.
+- Camera calibration: capture at least 10 images of an **11×8** inner-corner chessboard
+  (the code assumes a square size of 3 — the unit is whatever you measured your squares
+  in), then press 计算结果 (compute) followed by 保存 (save). Intrinsics and distortion
+  coefficients are written to `config\calibration_data.json`.
+- Radar calibration: adjust tvec until the projected radar points line up with the targets
+  in the image, then press 保存 (save) to write the extrinsics R/tvec back to the same file.
+- To test the CAN box without the camera, run `tools\zlgcan_demo.py`.
+
+## Troubleshooting
+
+- **No camera or radar connected**: the app still starts, but 打开设备 (open device) and
+  开始检测 (start detection) will fail. That is expected.
+- **PyCharm**: point the run configuration at `src\detect.py` and set the working directory
+  to the project root `F:\Radar-Camera-Fusion`. The old `.idea` was moved to
+  `archive\ide-config\`, so simply create a new run configuration.
+- **Legacy absolute paths**: the code used to hard-code paths from an old machine
+  (`C:\Users\94580\Desktop\prp\...`). Everything is derived from `src\paths.py` now, so the
+  project works regardless of machine, folder or working directory.
+
+---
+
+# 中文说明
+
+[English](#radar-camera-fusion) | **中文**
 
 相机 + 毫米波雷达的目标检测与测速程序：YOLOv8 负责视觉检测与跟踪，
 雷达提供目标的距离与速度；雷达点经相机标定参数投影到像素平面后，
@@ -32,7 +131,7 @@ F:\Radar-Camera-Fusion\
 │   └─ requirements.txt
 ├─ data\                数据（hymenoptera_data 为 YOLO 教程数据集，可删）
 ├─ outputs\             程序运行产物：logs\（训练日志）runs\（推理输出）
-├─ docs\                文档；docs\report\ 里是报告的 LaTeX 编译产物（1.pdf）
+├─ docs\                文档
 └─ archive\             非主线内容：ultralytics-main 源码、旧 PyCharm 配置、旧缓存
 ```
 
