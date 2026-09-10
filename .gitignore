@@ -1,0 +1,17 @@
+# 运行产物
+outputs/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 归档与外部源码（体积大且非本项目代码）
+archive/
+data/
+
+# IDE
+.idea/
+.vscode/
+
+# 模型权重（如后续换成自训练权重，可按需保留）
+# models/*.pt

@@ -1,0 +1,30 @@
+# Fusion 项目运行环境（Windows x64 / Python 3.10）
+#
+# 本机环境位置:  F:\anaconda3\envs\fusion   (Python 3.10.21, 64-bit)
+#
+# 从零复现:
+#   1) F:\anaconda3\Scripts\conda.exe create -p F:\anaconda3\envs\fusion python=3.10 pip -y
+#   2) F:\anaconda3\envs\fusion\python.exe -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+#   3) F:\anaconda3\envs\fusion\python.exe -m pip install -r requirements.txt
+#
+# 注意:
+#   - 必须是 64 位 Python，src\zlgcan.dll 是 x64 的。
+#   - torch 固定为 2.5.x：ultralytics 8.2.40 与 torch>=2.6（torch.load 默认 weights_only=True）不兼容。
+#   - lapx 是 model.track() 跟踪功能必需的，Ultralytics 的自动安装可能装错解释器，务必手动装。
+
+ultralytics==8.2.40
+lapx>=0.5.2
+PyQt5==5.15.11
+opencv-python==4.10.0.84
+matplotlib==3.9.2
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.15.3
+seaborn==0.13.2
+PyYAML==6.0.3
+requests==2.34.2
+psutil==7.2.2
+tqdm==4.70.0
+py-cpuinfo==9.0.0
+ultralytics-thop==2.1.6
+pillow==12.3.0
