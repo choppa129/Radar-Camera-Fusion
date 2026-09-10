@@ -7,7 +7,7 @@
 ## 目录结构
 
 ```
-F:\Fusion\
+F:\Radar-Camera-Fusion\
 ├─ run.bat              一键启动（激活 conda 环境并运行主程序）
 ├─ README.md            本文件
 ├─ .gitignore
@@ -52,7 +52,7 @@ F:\Fusion\
 
 ```
 conda activate fusion
-cd /d F:\Fusion
+cd /d F:\Radar-Camera-Fusion
 python src\detect.py
 ```
 
@@ -73,5 +73,5 @@ python tools\check_env.py
 ## 常见问题
 
 - **没有接相机/雷达时**：程序能启动，但「打开设备」「开始检测」会失败，这是正常的。
-- **PyCharm**：运行配置指向 `src\detect.py`，工作目录设为项目根目录 `F:\Fusion`；旧的 `.idea` 已移入 `archive\ide-config\`，重新打开工程后新建运行配置即可。
+- **PyCharm**：运行配置指向 `src\detect.py`，工作目录设为项目根目录 `F:\Radar-Camera-Fusion`；旧的 `.idea` 已移入 `archive\ide-config\`，重新打开工程后新建运行配置即可。
 - **历史的绝对路径**：代码原先硬编码了旧电脑的 `C:\Users\94580\Desktop\prp\...`，现已全部改为由 `src\paths.py` 推算，换机器、换目录、换工作目录都不受影响。

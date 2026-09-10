@@ -3,7 +3,7 @@
 Fusion 项目自检脚本。
 
 用法（在 fusion 环境里）:
-    python F:\\Fusion\\tools\\check_env.py
+    python F:\\Radar-Camera-Fusion\\tools\\check_env.py
 
 检查内容：
     1. Python 位数与版本（zlgcan.dll 是 64 位，必须是 64 位解释器）

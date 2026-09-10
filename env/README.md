@@ -13,13 +13,13 @@ F:\anaconda3\Scripts\conda.exe create -p F:\anaconda3\envs\fusion python=3.10 pi
 F:\anaconda3\envs\fusion\python.exe -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
 
 :: 3) 装其余依赖
-F:\anaconda3\envs\fusion\python.exe -m pip install -r F:\Fusion\env\requirements.txt
+F:\anaconda3\envs\fusion\python.exe -m pip install -r F:\Radar-Camera-Fusion\env\requirements.txt
 ```
 
 装完运行自检确认：
 
 ```bat
-F:\anaconda3\envs\fusion\python.exe F:\Fusion\tools\check_env.py
+F:\anaconda3\envs\fusion\python.exe F:\Radar-Camera-Fusion\tools\check_env.py
 ```
 
 ## 版本约束（不要随意升级）
