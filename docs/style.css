@@ -215,3 +215,48 @@ td{font-size:13px}
   .detection-box.unmatched{border-width:3px}
   .return-mark{border-width:3px}
 }
+
+
+/* WHITE-CANVAS REVISION — keep sensor data marks in color, not the page. */
+:root{--paper:#ffffff;--ink:#161616;--inkmuted:#595959;--line:#dedede;--dark:#ffffff;--panel:#ffffff}
+html,body,.site,.hero,.workbench-section,.how-section,.source-section,.cta-section{background:#fff;color:#161616}
+.nav{background:#fff;border-bottom:1px solid #dedede}
+.bench{background:#fff;color:#171717;border:1px solid #d7d7d7;box-shadow:none}
+.bench-toolbar,.panel-heading,.camera-footer,.radar-panel,.radar-footer,.summary-bar{background:#fff;color:#161616;border-color:#dedede}
+.bench-toolbar{border-bottom:1px solid #ddd}
+.bench-label,.panel-heading,.frame-count,.view-label,.camera-footer,.radar-footer,.photo-credit,.radar-range-label,.radar-x-label{color:#333}
+.tag{color:#444;border-color:#c5c5c5}
+.transport-btn{background:#fff;color:#111;border:1px solid #ccc}
+.transport-btn:hover{background:#f2f2f2}
+.play-btn{color:#111;border-color:#666}
+.camera-panel{border-right-color:#ddd;border-bottom-color:#ddd}
+.camera-stage{background:#fff}
+.camera-stage img{filter:saturate(1.06) contrast(1.05) brightness(.95)}
+.camera-stage.no-photo{background:#fff}
+.image-fallback{color:#555}
+.radar-canvas-holder{background:#fff}
+.radar-panel .panel-heading{border-top-color:#ddd}
+.radar-footer{border-top:1px solid #ddd}
+.radar-footer span,.radar-range-label,.radar-x-label{color:#444}
+.summary-bar{border-top:1px solid #dedede}
+.summary-bar>div{border-color:#e0e0e0}
+.summary-bar small{color:#606060}
+.summary-bar strong{color:#151515}
+.summary-bar span{color:#626262}
+.workbench-section .section-head,.how-section .section-head{color:#161616}
+.control-card,.association-card,.step,.reference-card{background:#fff;border:1px solid #dedede;box-shadow:none}
+.reference-top,.reference-bottom{background:#fff;color:#333}
+.reference-top span:last-child,.reference-bottom span,.reference-bottom>a{color:#555}
+.reference-image{background:#fff}
+.reference-bottom strong{color:#111}
+.source-section{border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5}
+.cta-section{background:#fff}
+.site-footer{background:#fff;color:#444;border-top:1px solid #dedede}
+.footer-brand,.footer-brand span{color:#141414}
+.footer-brand small{color:#555}
+.site-footer a{color:#222}
+.hero-decoration{opacity:.28}
+@media(max-width:560px){
+  .bench-toolbar{background:#fff}
+  .camera-footer,.radar-footer{background:#fff}
+}
