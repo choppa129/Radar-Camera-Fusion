@@ -260,3 +260,23 @@ html,body,.site,.hero,.workbench-section,.how-section,.source-section,.cta-secti
   .bench-toolbar{background:#fff}
   .camera-footer,.radar-footer{background:#fff}
 }
+
+
+/* Detection boxes are <button> elements. Browser default button backgrounds
+   were painting opaque white over the underlying camera photograph.
+   Leave their interior COMPLETELY transparent in every interaction state. */
+#det-boxes .detection-box,
+#det-boxes .detection-box:hover,
+#det-boxes .detection-box:focus-visible,
+#det-boxes .detection-box.selected,
+#det-boxes .detection-box.unmatched,
+#det-boxes .detection-box.unmatched:hover,
+#det-boxes .detection-box.unmatched.selected {
+  -webkit-appearance:none;
+  appearance:none;
+  background:transparent;
+  background-color:transparent;
+  background-image:none;
+  padding:0;
+  box-shadow:none;
+}
