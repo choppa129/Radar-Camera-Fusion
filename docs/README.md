@@ -21,16 +21,18 @@ Open `docs/index.html` locally for development, or serve `docs/` using
 
 ## Controls and data provenance
 
-- **Real, licensed background photograph:** Carlos Felipe Ramírez Mesa,
-  [Unsplash](https://unsplash.com/photos/a-busy-street-with-traffic-hjCcMtkcwxM),
+- **Real, licensed pasture photograph:** Abdou,
+  [Unsplash: grazing cattle in a meadow](https://unsplash.com/photos/brown-cow-on-green-grass-field-during-daytime-Oql56ssll_c),
   [Unsplash License](https://unsplash.com/license).
   It is linked from the original image host and not stored in this repository.
 - **Actual published radar image:** independent example from
   [Pitt-Radar](https://github.com/yujheli/Pitt-Radar), MIT license, by
   Yu-Jhe Li et al. (CVPR 2023). It has **no spatial or temporal relationship**
   to the photo or the synthetic overlays.
-- **Synthetic demonstration measurements:** targets, frame-to-frame movements,
-  detection rectangles, depth, lateral position and velocity are coded in
+- **Illustrative nature-scene overlay:** three cow boxes were manually positioned
+  over one fixed photographic frame; they are not YOLO detections. Six simulated
+  radar samples contain independently synthesized ranges, velocities and jitter
+  that change without moving the photograph. Values are coded in
   `app.js` and generated deterministically in the browser. These are not
   real sensor readings, not measured experimental performance and not the
   result of running YOLOv8 inference.
@@ -42,8 +44,9 @@ Open `docs/index.html` locally for development, or serve `docs/` using
   enforcing at most one radar point per camera detection and vice versa.
   The production code may follow a different greedy choice order.
 
-The export control produces a small JSON record carrying a mandatory
-`SIMULATED_INTERACTIVE_DEMO` label. The simulated image overlays and
+The downloadable `data/demo-sequence.json` mirrors the six current pasture
+samples. The per-sample export control produces a JSON record carrying a mandatory
+`SIMULATED_INTERACTIVE_DEMO` label. The illustrative cattle annotations and
 reference radar illustration should **not** be represented as genuine
 field-robot experiments.
 
