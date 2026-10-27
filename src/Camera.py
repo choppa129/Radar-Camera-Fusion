@@ -54,11 +54,15 @@ class Worker(QObject):
         self.rvec, _ = cv2.Rodrigues(self.R)
         self.tvec = calibration_data['tvec']
 
-        self.timer = QTimer()
+        self.timer = QTimer(self)  # move with the worker into the camera thread
         self.timer.timeout.connect(self.update_Frame)
 
         self.point = []
-        self.Velocity = []
+        self.velocity = np.empty(0)
+        self.cap = None
+        self.isrunning = False
+        self.ret = False
+        self.calibration_size = None
         self.threshold = 100
 
     def load_calibration_data(self,file_path=None):
@@ -88,40 +92,62 @@ class Worker(QObject):
         }
 
     def run(self):
+        if self.isrunning:
+            return
+        self.cap = cv2.VideoCapture(self.camera_index)
+        if not self.cap.isOpened():
+            print(f"Unable to open camera index {self.camera_index}")
+            self.cap.release()
+            self.cap = None
+            return
         self.isrunning = True
-        self.cap=cv2.VideoCapture(self.camera_index)
-        self.timer.start(33)
+        self.timer.start(33)  # requested frame interval, not measured inference FPS
 
     def update_Frame(self):
-        if self.isrunning:
-            ret,frame=self.cap.read()
-            if self.mode == 0 and ret:
-                frame = cv2.undistort(frame, self.mtx, self.dist)
-                frame = self.track_objects(frame)
-            if len(self.point) > 0:
-                for p in self.point:
-                    x, y ,d= int(p[0]), int(p[1]),p[2]
-                    if 0 <= x < frame.shape[1] and 0 <= y < frame.shape[0]:
-                        # 在图像上绘制一个圆表示点的位置
-                        cv2.circle(frame, (x, y), 5, (255-int(d*3),0,0), -1)  # 红色填充圆
-            self.point=[]
-            if ret:
-                rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgb_image.shape
-                bytes_per_line = ch * w
-                qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-                self.image.emit(qt_image)
+        if not self.isrunning or self.cap is None:
+            return
+        ret, frame = self.cap.read()
+        if not ret or frame is None:
+            return  # avoid accessing frame.shape after a device read failure
+
+        if self.mode == 0:
+            frame = cv2.undistort(frame, self.mtx, self.dist)
+            frame = self.track_objects(frame)
+
+        if len(self.point) > 0:
+            for p in self.point:
+                x, y, d = int(p[0]), int(p[1]), p[2]
+                if 0 <= x < frame.shape[1] and 0 <= y < frame.shape[0]:
+                    blue = int(max(0, min(255, 255 - float(d) * 3)))
+                    cv2.circle(frame, (x, y), 5, (blue, 0, 0), -1)
+        self.point = []
+
+        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        qt_image = QImage(rgb_image.data, w, h, ch * w, QImage.Format_RGB888)
+        self.image.emit(qt_image.copy())  # detach from temporary NumPy frame buffer
 
     def process_radar_data(self, radar_data):
-        self.velocity=radar_data[:,-1]
-        point=radar_data[:,0:2]
-        point= np.insert(point, 2, 0, axis=1)
-        points = np.array(point, dtype=np.float32)
-        if len(points)>0:
-            projected_points, _ = cv2.projectPoints(points, self.rvec, self.tvec, self.mtx, self.dist)
-            projected_points = projected_points.reshape(-1, 2)
-            radar_second_column = radar_data[:, 1:2]
-            self.point = np.hstack((projected_points, radar_second_column))
+        radar_data = np.asarray(radar_data)
+        if radar_data.ndim != 2 or radar_data.shape[1] < 3 or len(radar_data) == 0:
+            self.point = []
+            self.velocity = np.empty(0)
+            return
+
+        self.velocity = radar_data[:, -1]
+        points = np.column_stack((
+            radar_data[:, 0],
+            radar_data[:, 1],
+            np.zeros(len(radar_data))
+        )).astype(np.float32)
+        # Normal detection operates on UNDISTORTED images. Project into the
+        # same undistorted pixel coordinates; calibration mode uses raw frames.
+        distortion = self.dist if self.mode != 0 else np.zeros_like(self.dist)
+        projected, _ = cv2.projectPoints(
+            points, self.rvec, self.tvec, self.mtx, distortion
+        )
+        projected = projected.reshape(-1, 2)
+        self.point = np.column_stack((projected, radar_data[:, 1]))
 
     def track_objects(self, frame):
         results = self.model.track(source=frame, persist=True, show=False)  # 执行追踪
@@ -156,6 +182,7 @@ class Worker(QObject):
         ret, frame = self.cap.read()
         if ret:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            self.calibration_size = gray.shape[::-1]
             ret, corners = cv2.findChessboardCorners(gray, self.chessboard_size, None)
 
             if ret:
@@ -172,7 +199,9 @@ class Worker(QObject):
             print("没有足够的图片用于标定，请拍摄至少10张照片")
             return
 
-        self.ret, self.mtx, self.dist, rvecs, tvecs = cv2.calibrateCamera(self.objpoints, self.imgpoints, img_size,None, None)
+        self.ret, self.mtx, self.dist, rvecs, tvecs = cv2.calibrateCamera(
+            self.objpoints, self.imgpoints, self.calibration_size or img_size, None, None
+        )
 
         if self.ret:
             print(f"相机矩阵: \n{self.mtx}")
@@ -234,6 +263,7 @@ class Worker(QObject):
     def update_RT(self,index,value):
         self.tvec[index]=value
 
+    @QtCore.pyqtSlot()
     def stop(self):
         self.isrunning = False
         self.timer.stop()
