@@ -2,7 +2,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QObject,QTimer
 import numpy as np
 from zlgcan import *
-from radar_protocol import RadarScanAssembler
+from radar_protocol import RadarScanAssembler, unpack_frames
 
 MAX_RCV_NUM     = 10
 class Worker(QObject):
@@ -57,13 +57,7 @@ class Worker(QObject):
         #       print("Error occurred while read CAN(FD) data!")
     def RadarDataRev(self, msgs, msgs_num, is_canfd=False):
         """Parse a received CAN batch and preserve scans spanning batches."""
-        frames = []
-        for i in range(msgs_num):
-            frame = msgs[i].frame
-            length = frame.len if is_canfd else frame.can_dlc
-            frames.append((int(frame.can_id), bytes(frame.data[:length])))
-
-        current_scan = self._decoder.feed(frames)
+        current_scan = self._decoder.feed(unpack_frames(msgs, msgs_num, is_canfd))
         if current_scan is not None:
             self.view = np.asarray(current_scan, dtype=np.float64).reshape(-1, 3)
             # Empty scans are emitted too, clearing old detections in the UI.
