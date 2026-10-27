@@ -10,9 +10,9 @@
     "fieldTrialEvidence": false,
     "photo": "Abdou / Unsplash License: https://unsplash.com/photos/brown-cow-on-green-grass-field-during-daytime-Oql56ssll_c",
     "radarReference": "Independent Pitt-Radar example: https://github.com/yujheli/Pitt-Radar",
-    "projection": "Illustrative pinhole-style camera coordinates; not measured extrinsics",
+    "projection": "Illustrative u=500+1000*X/Z, v=230+1200/Z; not measured extrinsics",
     "defaultGatePixels": 80,
-    "units": "radar range/lateral in meters; radial velocity in m/s; 1000x620 conceptual pixel grid"
+    "units": "radar lateral/range in m; velocity in m/s; photo overlay coordinate system 1000x486.49"
   },
   "frames": [
     {
@@ -23,80 +23,97 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.06,
-          "range": 4.33,
+          "lateral": -2.67,
+          "range": 8.25,
           "velocity": -0.08
         },
         {
           "id": "R02",
-          "lateral": 0.955,
-          "range": 4.262,
+          "lateral": -1.605,
+          "range": 6.492,
           "velocity": 0.1
         },
         {
           "id": "R03",
-          "lateral": 1.536,
-          "range": 4.019,
+          "lateral": 0.189,
+          "range": 6.639,
           "velocity": -0.07
         },
         {
           "id": "R04",
-          "lateral": -3.647,
-          "range": 10.461,
+          "lateral": 2.573,
+          "range": 6.811,
           "velocity": -0.03
         }
       ],
       "associations": [
         {
+          "detectionId": "C03",
+          "radarId": "R03",
+          "pixelError": 2.58
+        },
+        {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 1.93
+          "pixelError": 3.95
+        },
+        {
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 4.22
         },
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 2.78
-        },
-        {
-          "detectionId": "C03",
-          "radarId": "R03",
-          "pixelError": 31.64
+          "pixelError": 10.55
         }
       ]
     },
@@ -108,80 +125,97 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.043,
-          "range": 4.36,
+          "lateral": -2.653,
+          "range": 8.28,
           "velocity": -0.09
         },
         {
           "id": "R02",
-          "lateral": 0.955,
-          "range": 4.245,
+          "lateral": -1.605,
+          "range": 6.475,
           "velocity": 0.08
         },
         {
           "id": "R03",
-          "lateral": 1.519,
-          "range": 3.993,
+          "lateral": 0.172,
+          "range": 6.613,
           "velocity": -0.09
         },
         {
           "id": "R04",
-          "lateral": -3.666,
-          "range": 10.484,
+          "lateral": 2.554,
+          "range": 6.834,
           "velocity": -0.03
         }
       ],
       "associations": [
         {
+          "detectionId": "C03",
+          "radarId": "R03",
+          "pixelError": 1.46
+        },
+        {
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 2.89
+        },
+        {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 1.97
+          "pixelError": 3.19
         },
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 8.11
-        },
-        {
-          "detectionId": "C03",
-          "radarId": "R03",
-          "pixelError": 29.99
+          "pixelError": 11.64
         }
       ]
     },
@@ -193,62 +227,74 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.048,
-          "range": 4.372,
+          "lateral": -2.658,
+          "range": 8.292,
           "velocity": -0.11
         },
         {
           "id": "R02",
-          "lateral": 0.935,
-          "range": 4.213,
+          "lateral": -1.625,
+          "range": 6.443,
           "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 1.503,
-          "range": 3.99,
+          "lateral": 0.156,
+          "range": 6.61,
           "velocity": -0.09
         },
         {
           "id": "R04",
-          "lateral": -3.664,
-          "range": 10.517,
+          "lateral": 2.556,
+          "range": 6.867,
           "velocity": -0.01
         }
       ],
@@ -256,17 +302,22 @@
         {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 5.41
-        },
-        {
-          "detectionId": "C01",
-          "radarId": "R01",
-          "pixelError": 7.88
+          "pixelError": 1.24
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 26.57
+          "pixelError": 2.85
+        },
+        {
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 3.29
+        },
+        {
+          "detectionId": "C01",
+          "radarId": "R01",
+          "pixelError": 11.8
         }
       ]
     },
@@ -278,80 +329,97 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.068,
-          "range": 4.358,
+          "lateral": -2.678,
+          "range": 8.278,
           "velocity": -0.14
         },
         {
           "id": "R02",
-          "lateral": 0.922,
-          "range": 4.186,
+          "lateral": -1.638,
+          "range": 6.416,
           "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 1.509,
-          "range": 4.01,
+          "lateral": 0.162,
+          "range": 6.63,
           "velocity": -0.08
         },
         {
           "id": "R04",
-          "lateral": -3.644,
-          "range": 10.539,
+          "lateral": 2.576,
+          "range": 6.889,
           "velocity": 0.01
         }
       ],
       "associations": [
         {
-          "detectionId": "C01",
-          "radarId": "R01",
-          "pixelError": 3.02
-        },
-        {
-          "detectionId": "C02",
-          "radarId": "R02",
-          "pixelError": 7.8
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 1.6
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 26.22
+          "pixelError": 1.86
+        },
+        {
+          "detectionId": "C02",
+          "radarId": "R02",
+          "pixelError": 4.42
+        },
+        {
+          "detectionId": "C01",
+          "radarId": "R01",
+          "pixelError": 11.05
         }
       ]
     },
@@ -363,80 +431,97 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.078,
-          "range": 4.328,
+          "lateral": -2.688,
+          "range": 8.248,
           "velocity": -0.15
         },
         {
           "id": "R02",
-          "lateral": 0.932,
-          "range": 4.179,
+          "lateral": -1.628,
+          "range": 6.409,
           "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 1.529,
-          "range": 4.043,
+          "lateral": 0.182,
+          "range": 6.663,
           "velocity": -0.06
         },
         {
           "id": "R04",
-          "lateral": -3.632,
-          "range": 10.538,
+          "lateral": 2.588,
+          "range": 6.888,
           "velocity": 0.03
         }
       ],
       "associations": [
         {
-          "detectionId": "C01",
-          "radarId": "R01",
-          "pixelError": 1.18
+          "detectionId": "C03",
+          "radarId": "R03",
+          "pixelError": 1.32
+        },
+        {
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 1.42
         },
         {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 6.77
+          "pixelError": 3.26
         },
         {
-          "detectionId": "C03",
-          "radarId": "R03",
-          "pixelError": 28.11
+          "detectionId": "C01",
+          "radarId": "R01",
+          "pixelError": 10.68
         }
       ]
     },
@@ -448,80 +533,97 @@
           "id": "C01",
           "label": "cow",
           "center": [
-            272,
-            507
+            176,
+            386
           ],
           "size": [
-            125,
-            155
+            45,
+            62
           ]
         },
         {
           "id": "C02",
           "label": "cow",
           "center": [
-            708,
-            511
+            249,
+            416
           ],
           "size": [
-            145,
-            136
+            139,
+            110
           ]
         },
         {
           "id": "C03",
           "label": "cow",
           "center": [
-            820,
-            530
+            526,
+            410
           ],
           "size": [
-            116,
-            146
+            85,
+            103
+          ]
+        },
+        {
+          "id": "C04",
+          "label": "cows",
+          "center": [
+            875,
+            403
+          ],
+          "size": [
+            163,
+            88
           ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.065,
-          "range": 4.298,
+          "lateral": -2.675,
+          "range": 8.218,
           "velocity": -0.15
         },
         {
           "id": "R02",
-          "lateral": 0.952,
-          "range": 4.197,
+          "lateral": -1.608,
+          "range": 6.427,
           "velocity": 0.07
         },
         {
           "id": "R03",
-          "lateral": 1.538,
-          "range": 4.068,
+          "lateral": 0.191,
+          "range": 6.688,
           "velocity": -0.04
         },
         {
           "id": "R04",
-          "lateral": -3.643,
-          "range": 10.513,
+          "lateral": 2.577,
+          "range": 6.863,
           "velocity": 0.03
         }
       ],
       "associations": [
         {
-          "detectionId": "C01",
-          "radarId": "R01",
-          "pixelError": 2.2
-        },
-        {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 4.97
+          "pixelError": 1.08
+        },
+        {
+          "detectionId": "C04",
+          "radarId": "R04",
+          "pixelError": 1.91
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 28.28
+          "pixelError": 2.62
+        },
+        {
+          "detectionId": "C01",
+          "radarId": "R01",
+          "pixelError": 10.09
         }
       ]
     }
