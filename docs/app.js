@@ -161,8 +161,8 @@ function drawRadar(frame, matches) {
   const scaleY = (height - 60) / 25;
   const scaleX = Math.min(width * .07, 27);
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "rgba(159, 202, 200, .22)";
-  ctx.fillStyle = "#afcdce";
+  ctx.strokeStyle = "rgba(80, 100, 100, .21)";
+  ctx.fillStyle = "#444444";
   ctx.font = "12px IBM Plex Mono, monospace";
   for (const range of [5, 10, 15, 20, 25]) {
     const y = originY - range * scaleY;
@@ -175,14 +175,14 @@ function drawRadar(frame, matches) {
     if (lateral !== 0) ctx.fillText(lateral.toString(), x - 6, originY + 14);
   }
   // Sensor origin and viewing rays are schematic (not radar antenna physics).
-  ctx.strokeStyle = "rgba(43, 224, 186, .24)";
+  ctx.strokeStyle = "rgba(50, 100, 90, .17)";
   for (const rad of [-.54, 0, .54]) {
     ctx.beginPath(); ctx.moveTo(centerX, originY);
     ctx.lineTo(centerX + Math.sin(rad) * height, originY - Math.cos(rad) * height);
     ctx.stroke();
   }
   ctx.beginPath(); ctx.moveTo(centerX, originY - 7); ctx.lineTo(centerX - 6, originY + 5); ctx.lineTo(centerX + 6, originY + 5); ctx.closePath();
-  ctx.fillStyle = "#2be0ba"; ctx.fill();
+  ctx.fillStyle = "#262626"; ctx.fill();
   const matchedRadarIds = new Set(Array.from(matches.values()).map(m => m.radar));
   for (const target of frame.radar) {
     const x = centerX + target.lateral * scaleX;
@@ -190,11 +190,11 @@ function drawRadar(frame, matches) {
     if (x < 10 || x > width - 10 || y < 0 || y > height) continue;
     const matched = matchedRadarIds.has(target.id);
     ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2);
-    ctx.fillStyle = matched ? "rgba(43, 224, 186, .21)" : "rgba(255, 181, 106, .16)"; ctx.fill();
+    ctx.fillStyle = matched ? "rgba(10, 130, 105, .16)" : "rgba(185, 90, 10, .12)"; ctx.fill();
     ctx.beginPath(); ctx.arc(x, y, matched ? 4.2 : 3.2, 0, Math.PI * 2);
-    ctx.fillStyle = matched ? "#2be0ba" : "#ffb56a";
-    if (matched) ctx.fill(); else { ctx.lineWidth = 2; ctx.strokeStyle = "#ffb56a"; ctx.stroke(); }
-    ctx.fillStyle = "#e3f8f6";
+    ctx.fillStyle = matched ? "#008c75" : "#b45a13";
+    if (matched) ctx.fill(); else { ctx.lineWidth = 2; ctx.strokeStyle = "#b45a13"; ctx.stroke(); }
+    ctx.fillStyle = "#222222";
     ctx.font = "12px IBM Plex Mono, monospace";
     ctx.fillText(target.id + " " + showSigned(target.velocity), x + 9, y - 9);
   }
