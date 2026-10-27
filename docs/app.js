@@ -114,7 +114,7 @@ function drawCamera(frame, projected, matches) {
       link.setAttribute("y1", rounded(det.center[1], 2));
       link.setAttribute("x2", rounded(associated.target.u, 2));
       link.setAttribute("y2", rounded(associated.target.v, 2));
-      link.setAttribute("stroke", state.selected === det.id ? "#ffffff" : "#d0d0d0");
+      link.setAttribute("stroke", state.selected === det.id ? "#afffeb" : "#2be0ba");
       link.setAttribute("stroke-width", state.selected === det.id ? "3" : "1.75");
       link.setAttribute("stroke-dasharray", "5 5");
       link.setAttribute("opacity", ".95");
@@ -161,8 +161,8 @@ function drawRadar(frame, matches) {
   const scaleY = (height - 60) / 25;
   const scaleX = Math.min(width * .07, 27);
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "rgba(190, 190, 190, .20)";
-  ctx.fillStyle = "#b5b5b5";
+  ctx.strokeStyle = "rgba(159, 202, 200, .22)";
+  ctx.fillStyle = "#afcdce";
   ctx.font = "12px IBM Plex Mono, monospace";
   for (const range of [5, 10, 15, 20, 25]) {
     const y = originY - range * scaleY;
@@ -175,14 +175,14 @@ function drawRadar(frame, matches) {
     if (lateral !== 0) ctx.fillText(lateral.toString(), x - 6, originY + 14);
   }
   // Sensor origin and viewing rays are schematic (not radar antenna physics).
-  ctx.strokeStyle = "rgba(205, 205, 205, .19)";
+  ctx.strokeStyle = "rgba(43, 224, 186, .24)";
   for (const rad of [-.54, 0, .54]) {
     ctx.beginPath(); ctx.moveTo(centerX, originY);
     ctx.lineTo(centerX + Math.sin(rad) * height, originY - Math.cos(rad) * height);
     ctx.stroke();
   }
   ctx.beginPath(); ctx.moveTo(centerX, originY - 7); ctx.lineTo(centerX - 6, originY + 5); ctx.lineTo(centerX + 6, originY + 5); ctx.closePath();
-  ctx.fillStyle = "#f4f4f4"; ctx.fill();
+  ctx.fillStyle = "#2be0ba"; ctx.fill();
   const matchedRadarIds = new Set(Array.from(matches.values()).map(m => m.radar));
   for (const target of frame.radar) {
     const x = centerX + target.lateral * scaleX;
@@ -190,11 +190,11 @@ function drawRadar(frame, matches) {
     if (x < 10 || x > width - 10 || y < 0 || y > height) continue;
     const matched = matchedRadarIds.has(target.id);
     ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2);
-    ctx.fillStyle = matched ? "rgba(255, 255, 255, .18)" : "rgba(190, 190, 190, .08)"; ctx.fill();
+    ctx.fillStyle = matched ? "rgba(43, 224, 186, .21)" : "rgba(255, 181, 106, .16)"; ctx.fill();
     ctx.beginPath(); ctx.arc(x, y, matched ? 4.2 : 3.2, 0, Math.PI * 2);
-    ctx.fillStyle = matched ? "#ffffff" : "#adadad";
-    if (matched) ctx.fill(); else { ctx.lineWidth = 2; ctx.strokeStyle = "#adadad"; ctx.stroke(); }
-    ctx.fillStyle = "#f0f0f0";
+    ctx.fillStyle = matched ? "#2be0ba" : "#ffb56a";
+    if (matched) ctx.fill(); else { ctx.lineWidth = 2; ctx.strokeStyle = "#ffb56a"; ctx.stroke(); }
+    ctx.fillStyle = "#e3f8f6";
     ctx.font = "12px IBM Plex Mono, monospace";
     ctx.fillText(target.id + " " + showSigned(target.velocity), x + 9, y - 9);
   }
