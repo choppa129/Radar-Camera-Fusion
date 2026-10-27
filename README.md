@@ -1,5 +1,7 @@
 # Radar-Camera Fusion
 
+> **Interactive web demo:** [Open Radar × Camera Fusion Lab](https://choppa129.github.io/Radar-Camera-Fusion/) (enable **Settings → Pages → main /docs** if the site is not live yet). The website demonstrates simulated radar/detection overlays on a licensed photo; it does **not** reproduce field trial results. [Demo documentation](docs/README.md).
+ 
 **English** | [中文](#中文说明)
 
 A radar–camera fusion system for object detection and velocity estimation.
