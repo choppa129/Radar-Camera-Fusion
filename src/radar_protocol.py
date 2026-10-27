@@ -28,6 +28,19 @@ def decode_target(payload):
     return x, y, vy * cos(bearing) + vx * sin(bearing)
 
 
+def unpack_frames(messages, count, is_canfd=False):
+    """Yield (CAN ID, data bytes) from vendor ctypes frame objects.
+
+    Classical CAN frames expose can_dlc; CAN-FD frames expose len instead.
+    """
+    for i in range(count):
+        frame = messages[i].frame
+        length = int(frame.len if is_canfd else frame.can_dlc)
+        if length < 0 or length > len(frame.data):
+            continue
+        yield int(frame.can_id), bytes(frame.data[:length])
+
+
 class RadarScanAssembler:
     """Accumulate target frames after a header, across receive batches.
 
