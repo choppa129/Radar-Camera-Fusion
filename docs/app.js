@@ -11,10 +11,10 @@ const BASE_DETECTIONS = [
   { id: "C05", label: "person", center: [809, 401], size: [65, 142], conf: 0.84 }
 ];
 const BASE_RETURNS = [
-  { id: "R01", lateral: -1.90, range: 7.52, velocity: -2.40 },
-  { id: "R02", lateral: 0.26, range: 5.11, velocity: 3.70 },
-  { id: "R03", lateral: 4.35, range: 17.90, velocity: -1.65 },
-  { id: "R04", lateral: -0.76, range: 10.90, velocity: 1.25 },
+  { id: "R01", lateral: -1.55, range: 7.52, velocity: -2.40 },
+  { id: "R02", lateral: 0.10, range: 5.11, velocity: 3.70 },
+  { id: "R03", lateral: 3.30, range: 17.90, velocity: -1.65 },
+  { id: "R04", lateral: -0.45, range: 10.90, velocity: 1.25 },
   { id: "R05", lateral: 4.90, range: 8.00, velocity: -0.30 }
 ];
 const FRAME_COUNT = 6;
