@@ -151,3 +151,67 @@ td{font-size:13px}
   .source-list{font-size:14px}
   .site-footer{font-size:12px}
 }
+
+
+/* ── Restrained color in the sensor visualization only (2026-10-27) ──
+   Keep the overall site black / white / gray with enlarged type.
+   Use turquoise = associated, amber = unmatched, yellow = radar projection.
+*/
+.camera-stage img{
+  filter:saturate(1.06) contrast(1.05) brightness(.79);
+}
+.camera-stage:after{
+  background:linear-gradient(180deg,rgba(0,0,0,.48),transparent 22%,transparent 73%,rgba(0,0,0,.65));
+}
+.detection-box{
+  border:2px solid #2be0ba;
+  box-shadow:0 0 0 1px #0008,inset 0 0 18px #2be0ba18;
+}
+.detection-box:hover,.detection-box.selected{
+  border-color:#a5ffe9;
+  box-shadow:0 0 0 3px #2be0ba70,inset 0 0 24px #2be0ba24;
+}
+.detection-box.unmatched{
+  border:2px dashed #ffb56a;
+  box-shadow:inset 0 0 20px #ffb56a18;
+}
+.detection-box.unmatched:hover,.detection-box.unmatched.selected{
+  border-color:#ffdcac;
+  box-shadow:0 0 0 3px #ffb56a6c,inset 0 0 20px #ffb56a28;
+}
+.detection-label{
+  background:#064d45;
+  color:#e8fff8;
+}
+.detection-box.unmatched .detection-label{
+  background:#74451f;
+  color:#fff2dc;
+}
+.return-mark{
+  border:2px solid #ffe187;
+  box-shadow:0 0 0 3px #000b,0 0 15px #ffdc7090;
+}
+.return-mark:before,.return-mark:after{background:#ffe187}
+.legend-line{border-color:#2be0ba}
+.legend-line.unmatched{border-color:#ffb56a;border-top-style:dashed}
+.legend-mark{border-color:#ffe187}
+.radar-canvas-holder{
+  background:radial-gradient(circle at 50% 85%,#1a3335,#101418 73%);
+}
+.scope-dot,.dot-cyan,.tiny-pulse,.hud-green{background:#2be0ba}
+.status-pill{
+  background:#e5f7ef;
+  border-color:#63cbb3;
+  color:#195d4c;
+}
+.status-pill.missing{
+  background:#fff2e2;
+  border-color:#dca675;
+  color:#865322;
+}
+.reference-image img{filter:none}
+@media(prefers-contrast:more){
+  .detection-box{border-width:3px}
+  .detection-box.unmatched{border-width:3px}
+  .return-mark{border-width:3px}
+}
