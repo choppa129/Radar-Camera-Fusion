@@ -2,7 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QHBoxLayout, QGroupBox,QComboBox,QMessageBox,QDoubleSpinBox
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QThread, QTimer
+from PyQt5.QtCore import QThread, QTimer, QMetaObject, Qt
 from zlgcan import *
 import json
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -173,6 +173,8 @@ class MainWindow(QWidget):
         cur_chn_info = cur_dev_info["chn_info"]
 
         if is_open:
+            self.cmbCANChn.clear()
+            self.cmbBaudrate.clear()
             # 通道
             self.cmbCANChn.addItems(tuple([str(i) for i in range(cur_dev_info["chn_num"])]))
             self.cmbCANChn.setCurrentIndex(0)
@@ -267,7 +269,7 @@ class MainWindow(QWidget):
             # set usbcanfd clock
             if self._cur_dev_info["dev_type"] in USBCANFD_TYPE:
                 ip = self._zcan.GetIProperty(self._dev_handle)
-                self._zcan.SetValue(ip, str(self.cmbCANChn.current()) + "/clock", "60000000")
+                self._zcan.SetValue(ip, str(self.cmbCANChn.currentIndex()) + "/clock", "60000000")
                 self._zcan.ReleaseIProperty(ip)
 
             chn_cfg = ZCAN_CHANNEL_INIT_CONFIG()
@@ -276,7 +278,7 @@ class MainWindow(QWidget):
                 chn_cfg.config.canfd.mode = self.cmbCANMode
                 chn_cfg.config.canfd.abit_timing = self._cur_dev_info["chn_info"]["baudrate"][self.cmbBaudrate.currentText()]
                 chn_cfg.config.canfd.dbit_timing = self._cur_dev_info["chn_info"]["data_baudrate"][
-                    self.cmbDataBaudrate.currentText()]
+                    self.cmbDataBaudrate]
             else:
                 chn_cfg.config.can.mode = self.cmbCANMode
                 if self._cur_dev_info["dev_type"] in USBCAN_I_II_TYPE:
@@ -293,7 +295,7 @@ class MainWindow(QWidget):
 
             ret = self._zcan.StartCAN(self._can_handle)
             if ret != ZCAN_STATUS_OK:
-                QMessageBox.critical(title="打开通道", message="打开通道失败!")
+                QMessageBox.critical(self, "打开通道", "打开通道失败!")
                 return
 
             self.start_camera()
@@ -380,7 +382,7 @@ class MainWindow(QWidget):
             # set usbcanfd clock
             if self._cur_dev_info["dev_type"] in USBCANFD_TYPE:
                 ip = self._zcan.GetIProperty(self._dev_handle)
-                self._zcan.SetValue(ip, str(self.cmbCANChn.current()) + "/clock", "60000000")
+                self._zcan.SetValue(ip, str(self.cmbCANChn.currentIndex()) + "/clock", "60000000")
                 self._zcan.ReleaseIProperty(ip)
 
             chn_cfg = ZCAN_CHANNEL_INIT_CONFIG()
@@ -390,7 +392,7 @@ class MainWindow(QWidget):
                 chn_cfg.config.canfd.abit_timing = self._cur_dev_info["chn_info"]["baudrate"][
                     self.cmbBaudrate.currentText()]
                 chn_cfg.config.canfd.dbit_timing = self._cur_dev_info["chn_info"]["data_baudrate"][
-                    self.cmbDataBaudrate.currentText()]
+                    self.cmbDataBaudrate]
             else:
                 chn_cfg.config.can.mode = self.cmbCANMode
                 if self._cur_dev_info["dev_type"] in USBCAN_I_II_TYPE:
@@ -407,7 +409,7 @@ class MainWindow(QWidget):
 
             ret = self._zcan.StartCAN(self._can_handle)
             if ret != ZCAN_STATUS_OK:
-                QMessageBox.critical(title="打开通道", message="打开通道失败!")
+                QMessageBox.critical(self, "打开通道", "打开通道失败!")
                 return
 
             # start radar thread
@@ -477,11 +479,14 @@ class MainWindow(QWidget):
         self.thread_radar.start()
 
     def stop_radar(self):
-        if hasattr(self, 'worker_radar'):
-            self.worker_radar.stop()
-        if hasattr(self, 'thread_radar') and self.thread_radar.isRunning():
+        if hasattr(self, "thread_radar") and self.thread_radar.isRunning():
+            # Timers belong to the worker thread, not the GUI thread.
+            QMetaObject.invokeMethod(
+                self.worker_radar, "stop", Qt.BlockingQueuedConnection
+            )
             self.thread_radar.quit()
             self.thread_radar.wait()
+
 
     def start_camera(self,index=0,mode=0):
         self.thread_camera = QThread()
@@ -494,9 +499,13 @@ class MainWindow(QWidget):
         self.thread_camera.start()
 
     def stop_camera(self):
-        if self.worker_camera.isrunning:
-            self.worker_camera.stopRequested.emit()
-            QTimer.singleShot(100, lambda: (self.thread_camera.quit(), self.thread_camera.wait()))
+        if hasattr(self, "thread_camera") and self.thread_camera.isRunning():
+            QMetaObject.invokeMethod(
+                self.worker_camera, "stop", Qt.BlockingQueuedConnection
+            )
+            self.thread_camera.quit()
+            self.thread_camera.wait()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
