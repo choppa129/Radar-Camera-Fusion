@@ -1,176 +1,105 @@
-# Radar-Camera Fusion
+# Camera–Radar Fusion for Field-Robot Perception
 
-**English** | [中文](#中文说明)
+A **77 GHz mmWave radar + monocular camera** perception prototype for robots operating in outdoor field environments. YOLOv8 detects objects in camera images; radar supplies range and velocity measurements. A calibrated geometric projection and nearest-neighbor association join the two modalities so that image detections can display radar-derived motion estimates.
 
-A radar–camera fusion system for object detection and velocity estimation.
-YOLOv8 handles visual detection and tracking, while a mmWave radar supplies each
-target's range and velocity. Radar points are projected onto the image plane with
-the camera calibration and matched to the detection boxes by nearest neighbour,
-so every box can be annotated with the radar-measured velocity.
+**Python · YOLOv8 · OpenCV · 77 GHz radar · CAN/CAN FD · PyQt5 · NumPy**
 
-## Repository layout
+[English](#overview) · [中文简介](#中文简介) · [Personal portfolio](https://choppa129.github.io/projects/radar-camera-fusion/)
 
-```
-F:\Radar-Camera-Fusion\
-├─ run.bat              one-click launcher (activates the conda env and starts the app)
-├─ README.md            this file
-├─ .gitignore
-├─ src\                 source code
-│   ├─ detect.py        main app (PyQt5 UI: video, radar scatter plot, control and calibration panels)
-│   ├─ Camera.py        camera thread, YOLOv8 detection/tracking, projection + fusion, camera calibration
-│   ├─ Radar.py         radar thread (polls targets from the CAN channel on a timer)
-│   ├─ zlgcan.py        ZLG CAN driver wrapper (ctypes)
-│   └─ paths.py         single source of truth for every path in the project
-├─ driver\              ZLG CAN driver (keep together, do not split)
-│   ├─ zlgcan.dll
-│   ├─ kerneldlls\      driver kernel libraries, must stay in the same folder as zlgcan.dll
-│   └─ dev_info.json    device types / channels / baud rate table
-├─ models\              YOLO weights
-│   └─ yolov8n.pt
-├─ config\              calibration parameters
-│   └─ calibration_data.json    intrinsics, distortion, radar-camera extrinsics R/tvec
-├─ tools\               utilities
-│   ├─ check_env.py     environment and path self-check
-│   └─ zlgcan_demo.py   ZLG's official CAN demo GUI (test the CAN box without the camera)
-├─ env\                 environment docs and dependency list
-│   └─ requirements.txt
-├─ data\                data (hymenoptera_data is the YOLO tutorial dataset, safe to delete)
-├─ outputs\             runtime artefacts: logs\ (training logs), runs\ (inference output)
-├─ docs\                documents
-└─ archive\             non-essential: ultralytics-main source, old PyCharm config, old caches
-```
+## Overview
 
-## Environment
+| | |
+| --- | --- |
+| **Problem** | RGB cameras recognize objects but do not directly measure object range or radial velocity. Radar adds motion and depth information under challenging outdoor conditions. |
+| **Approach** | Decision-level fusion: YOLOv8 detections + decoded radar target measurements + extrinsic projection into the image plane. |
+| **Association** | Nearest projected radar return to a detection-box center, with a configurable **100 px** maximum-distance gate in the current implementation. |
+| **Display** | Live camera detections and optional radar velocity labels, alongside a radar scatter plot and calibration controls. |
+| **Experiment context** | Field-robot evaluation explored targets within roughly **±5 m laterally** and **12 m forward**, depending on the test arrangement. |
+| **Important timing note** | Camera acquisition is **scheduled** at a 33 ms timer interval. This is **not** a measured 30 FPS end-to-end fusion throughput claim. |
 
-A conda environment named `fusion` is already set up on this machine
-(`F:\anaconda3\envs\fusion`, Python 3.10.21, 64-bit). See [env/README.md](env/README.md)
-for the install steps, version constraints and the commands needed to rebuild it from scratch.
+## Processing pipeline
 
-Two hard requirements:
+1. **Camera & detection:** obtain USB-camera frames and run the YOLOv8n detector/tracker.
+2. **Radar transport:** read CAN/CAN-FD frames using the ZLG interface. A `0x60A` header starts a scan and `0x60B` records contain target information.
+3. **Radar decoding:** convert packed fields into lateral/forward coordinates and radial velocity.
+4. **Calibration:** use camera intrinsics, lens distortion and radar-to-camera extrinsics to project radar targets into image coordinates. Normal detection uses undistorted camera frames, so its radar projection uses corresponding undistorted coordinates.
+5. **Association:** find the nearest projected radar point to each YOLO bounding-box center. If the pixel distance is inside the gate, append that radar target's velocity; otherwise show **Unknown**.
+6. **Visualization:** display the annotated video and a radar-space plot within the PyQt5 GUI.
 
-- a **64-bit** Python, because `driver\zlgcan.dll` is x64;
-- **torch pinned to 2.5.x** — ultralytics 8.2.40 is incompatible with torch ≥ 2.6.
+This is a **decision-level sensor fusion baseline**, not a learned end-to-end fusion model. Association is spatial-only; the current pipeline does not implement explicit multi-sensor clock synchronization, temporal filtering or uncertainty-weighted data association.
 
-## Running
+## Technical contributions
 
-Double-click `run.bat`, or:
+- Integrated an image detector/tracker with a real mmWave radar receive path for field-robot perception.
+- Implemented camera calibration, radar-frame decoding and radar-to-image coordinate projection.
+- Built a PyQt5 interface for live detections, radar scatter plots, sensor setup and interactive calibration.
+- Separated radar packet decoding from the device driver so core math and split-packet handling can be regression-tested without hardware.
 
-```
+## Reproducing the project
+
+**Required for the full demo:** Windows x64, Python 3.10, a supported ZLG USB-to-CAN device with its vendor runtime, the radar and a USB camera. A discrete NVIDIA GPU is recommended but not required for the program logic. The included calibration file corresponds to the original device arrangement; **recalibrate for any different camera, lens, resolution or sensor mounting**.
+
+Open **Anaconda Prompt** in a clone of the repository:
+
+```bat
+git clone https://github.com/choppa129/Radar-Camera-Fusion.git
+cd Radar-Camera-Fusion
+conda create -n fusion python=3.10 -y
 conda activate fusion
-cd /d F:\Radar-Camera-Fusion
-python src\detect.py
-```
-
-Run the self-check first if you want to verify the setup (it checks dependencies, GPU,
-driver, model and calibration file):
-
-```
+python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install -r env\requirements.txt
 python tools\check_env.py
+run.bat
 ```
 
-## Hardware and workflow
+The PyTorch command above installs **CUDA 12.4 wheels**. See [env/README.md](env/README.md) for alternatives, package compatibility and environment checks. Run from the repository root; `run.bat` no longer assumes an `F:` installation directory.
 
-- Camera: a USB webcam, index 0 in the code. Radar: a ZLG USBCANFD-series CAN box.
-- In the UI: pick the device type and channel → open the device → start detection. The
-  camera view is overlaid with detection boxes and radar velocities, and the radar point
-  cloud is plotted on the right.
-- Camera calibration: capture at least 10 images of an **11×8** inner-corner chessboard
-  (the code assumes a square size of 3 — the unit is whatever you measured your squares
-  in), then press 计算结果 (compute) followed by 保存 (save). Intrinsics and distortion
-  coefficients are written to `config\calibration_data.json`.
-- Radar calibration: adjust tvec until the projected radar points line up with the targets
-  in the image, then press 保存 (save) to write the extrinsics R/tvec back to the same file.
-- To test the CAN box without the camera, run `tools\zlgcan_demo.py`.
+### Test the protocol without sensors
 
-## Troubleshooting
-
-- **No camera or radar connected**: the app still starts, but 打开设备 (open device) and
-  开始检测 (start detection) will fail. That is expected.
-- **PyCharm**: point the run configuration at `src\detect.py` and set the working directory
-  to the project root `F:\Radar-Camera-Fusion`. The old `.idea` was moved to
-  `archive\ide-config\`, so simply create a new run configuration.
-- **Legacy absolute paths**: the code used to hard-code paths from an old machine
-  (`C:\Users\94580\Desktop\prp\...`). Everything is derived from `src\paths.py` now, so the
-  project works regardless of machine, folder or working directory.
-
----
-
-# 中文说明
-
-[English](#radar-camera-fusion) | **中文**
-
-相机 + 毫米波雷达的目标检测与测速程序：YOLOv8 负责视觉检测与跟踪，
-雷达提供目标的距离与速度；雷达点经相机标定参数投影到像素平面后，
-与视觉检测框做最近邻匹配，把雷达速度补充到检测框上。
-
-## 目录结构
-
-```
-F:\Radar-Camera-Fusion\
-├─ run.bat              一键启动（激活 conda 环境并运行主程序）
-├─ README.md            本文件
-├─ .gitignore
-├─ src\                 源代码
-│   ├─ detect.py        主程序（PyQt5 界面：视频 + 雷达散点图 + 控制/标定面板）
-│   ├─ Camera.py        相机线程、YOLOv8 检测跟踪、坐标投影与融合、相机标定
-│   ├─ Radar.py         雷达线程（定时从 CAN 通道读取目标）
-│   ├─ zlgcan.py        周立功 CAN 卡驱动封装（ctypes）
-│   └─ paths.py         全部路径的统一出口，其余代码都从这里取路径
-├─ driver\              周立功 CAN 驱动（打包在一起，不要拆开）
-│   ├─ zlgcan.dll
-│   ├─ kerneldlls\      驱动的内核库，必须与 zlgcan.dll 同目录
-│   └─ dev_info.json    设备类型/通道/波特率配置
-├─ models\              YOLO 权重
-│   └─ yolov8n.pt
-├─ config\              标定参数
-│   └─ calibration_data.json    内参、畸变系数、雷达-相机外参 R/tvec
-├─ tools\               辅助工具
-│   ├─ check_env.py     环境与路径自检
-│   └─ zlgcan_demo.py   周立功官方 CAN 调试界面（不接相机也能单独测 CAN）
-├─ env\                 运行环境说明与依赖清单
-│   └─ requirements.txt
-├─ data\                数据（hymenoptera_data 为 YOLO 教程数据集，可删）
-├─ outputs\             程序运行产物：logs\（训练日志）runs\（推理输出）
-├─ docs\                文档
-└─ archive\             非主线内容：ultralytics-main 源码、旧 PyCharm 配置、旧缓存
+```sh
+python -m unittest discover -s tests -v
 ```
 
-## 环境
+These unit tests cover packed radar values, CAN versus CAN-FD frame lengths, truncated packets and scan assembly across multiple receive batches. They **do not** replace physical-device integration tests.
 
-已在本机创建好 conda 环境 `fusion`（位置 `F:\anaconda3\envs\fusion`，Python 3.10.21，64 位）。
-安装步骤、版本约束和从零复现的命令见 [env/README.md](env/README.md)。
+## Calibration
 
-两点硬性要求：
+**Camera intrinsics:** capture at least 10 chessboard observations using the **11 × 8 inner-corner** pattern expected by the current implementation. The board's physical square size must match the value used in `src/Camera.py` (currently the value `3`, in the chosen physical unit). For a different board, update the size and rerun calibration.
 
-- 必须是 **64 位** Python，`driver\zlgcan.dll` 是 x64 的；
-- **torch 固定在 2.5.x**，ultralytics 8.2.40 与 torch ≥ 2.6 不兼容。
+**Radar extrinsics:** adjust the radar-to-camera translation and ensure points align with camera observations. The calibration file stores `R`, `tvec`, camera matrix and lens distortion. Verify axis directions and velocity signs using a target with known motion before relying on measurements.
 
-## 运行
+## Repository map
 
-双击 `run.bat`，或者：
-
+```text
+Radar-Camera-Fusion/
+├── src/
+│   ├── detect.py           # PyQt5 UI and device controls
+│   ├── Camera.py           # capture, YOLO tracking, calibration, fusion
+│   ├── Radar.py            # CAN receive loop and worker
+│   ├── radar_protocol.py   # hardware-independent packet decoder
+│   ├── zlgcan.py           # vendor DLL ctypes wrapper
+│   └── paths.py            # repository-relative resource paths
+├── tests/                  # pure-Python protocol regression tests
+├── config/                 # sample calibration values
+├── driver/                 # ZLG driver and companion DLL assets
+├── models/yolov8n.pt       # existing YOLOv8n weights
+├── env/                    # installation guide and pinned dependencies
+├── tools/check_env.py      # hardware/software environment check
+└── run.bat                 # Windows launcher
 ```
-conda activate fusion
-cd /d F:\Radar-Camera-Fusion
-python src\detect.py
-```
 
-运行前可先自检（会检查依赖、GPU、驱动、模型、标定文件）：
+## Limitations & next steps
 
-```
-python tools\check_env.py
-```
+- **Hardware verification:** the automated tests cannot verify USB camera capture, DLL loading or on-site CAN communication.
+- **Data association:** the current 100 px matching threshold is heuristic. A useful next experiment is calibrated gating with 3D uncertainty and time synchronization.
+- **Field performance:** no precision/recall, velocity RMSE, latency percentiles or real FPS benchmark is provided here without a reproducible evaluation dataset.
+- **Visual evidence:** add an actual field test photograph or UI screenshot when available. No synthetic experiment screenshots or AI-generated images are used.
+- **Vendor code:** files in `driver/` include third-party DLLs; verify upstream redistribution/licensing terms before repackaging them.
 
-## 硬件与操作流程
+## 中文简介
 
-- 相机：USB 摄像头，代码中索引 0；雷达：周立功 USBCANFD 系列 CAN 盒。
-- 界面上选设备类型和通道 → 打开设备 → 开始检测：相机画面叠加检测框与雷达速度，右侧是雷达点云散点图。
-- 相机标定：用 **11×8** 内角点棋盘拍摄 ≥10 张（代码里方格尺寸按 3 计算，单位取决于你实测时的方格边长），点「计算结果」再「保存」，内参与畸变系数写入 `config\calibration_data.json`。
-- 雷达标定：调整 tvec 使雷达点投影与画面目标对齐，点「保存」把外参 R/tvec 写回同一文件。
-- 只测 CAN 不测相机时，可直接跑 `tools\zlgcan_demo.py`。
+本项目面向**田间作业机器人**的感知需求，将 **YOLOv8 相机目标检测**与 **77 GHz 毫米波雷达测距、测速**结合。雷达 CAN 数据解码后，经相机标定参数投影至图像坐标系，并使用 **100 像素门控的最近邻匹配**为检测框补充雷达速度信息。PyQt5 界面展示视频、雷达点云及标定控制。
 
-## 常见问题
+项目包含真实硬件使用的代码路径。新增的协议单元测试可在没有雷达的电脑上运行，但**不能替代真实硬件联调**。代码中的 33 ms 是相机定时器设定值，不代表已测得的完整融合流水线帧率。
 
-- **没有接相机/雷达时**：程序能启动，但「打开设备」「开始检测」会失败，这是正常的。
-- **PyCharm**：运行配置指向 `src\detect.py`，工作目录设为项目根目录 `F:\Radar-Camera-Fusion`；旧的 `.idea` 已移入 `archive\ide-config\`，重新打开工程后新建运行配置即可。
-- **历史的绝对路径**：代码原先硬编码了旧电脑的 `C:\Users\94580\Desktop\prp\...`，现已全部改为由 `src\paths.py` 推算，换机器、换目录、换工作目录都不受影响。
+有关环境配置，详见 [env/README.md](env/README.md)；项目介绍也收录于 [个人作品集](https://choppa129.github.io/projects/radar-camera-fusion/)。
