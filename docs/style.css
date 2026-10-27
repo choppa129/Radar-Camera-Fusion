@@ -288,3 +288,8 @@ html,body,.site,.hero,.workbench-section,.how-section,.source-section,.cta-secti
 .camera-stage{aspect-ratio:1000 / 620}
 .camera-stage img{object-fit:cover;object-position:50% 50%}
 @media(max-width:560px){.camera-stage{aspect-ratio:1000 / 620}}
+
+/* Exact source photo ratio (1776×864): no horizontal cropping. */
+.camera-stage{aspect-ratio:37 / 18!important}
+.camera-stage img{object-fit:fill;object-position:center}
+@media(max-width:560px){.camera-stage{aspect-ratio:37 / 18!important}}
