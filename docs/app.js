@@ -14,10 +14,10 @@ const BASE_DETECTIONS = [
 // Four independently simulated radar targets, deliberately near the
 // annotated cattle. Not recorded by a real sensor.
 const BASE_RETURNS = [
-  { id: "R01", lateral: -2.10, range: 8.25, velocity: -0.12 },
-  { id: "R02", lateral: -2.07, range: 6.45, velocity: 0.08 },
-  { id: "R03", lateral: 0.13, range: 6.65, velocity: -0.06 },
-  { id: "R04", lateral: 2.52, range: 6.85, velocity: 0.00 }
+  { id: "R01", lateral: -2.67, range: 8.25, velocity: -0.12 },
+  { id: "R02", lateral: -1.62, range: 6.45, velocity: 0.08 },
+  { id: "R03", lateral: 0.173, range: 6.65, velocity: -0.06 },
+  { id: "R04", lateral: 2.57, range: 6.85, velocity: 0.00 }
 ];
 const FRAME_COUNT = 6;
 const CAMERA_WIDTH = 1000;
