@@ -1,34 +1,68 @@
-# 运行环境说明
+# Windows environment setup
 
-本机现有环境：conda 环境名 `fusion`，位置 `F:\anaconda3\envs\fusion`，
-Python 3.10.21（64 位），PyTorch 2.5.1 + CUDA 12.4，GPU 为 RTX 3050 Ti Laptop。
+The graphical application depends on the **Windows x64 ZLG CAN DLL** and has
+been developed with **Python 3.10**. Conda commands below work from **Anaconda
+Prompt**, regardless of where the repository is cloned.
 
-## 从零复现（三步）
+## Install
 
-```bat
-:: 1) 建环境（必须 64 位 Python）
-F:\anaconda3\Scripts\conda.exe create -p F:\anaconda3\envs\fusion python=3.10 pip -y
+1. Create/activate the environment:
 
-:: 2) 装 GPU 版 PyTorch（CUDA 12.4，约 2.5 GB）
-F:\anaconda3\envs\fusion\python.exe -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+   ```bat
+   conda create -n fusion python=3.10 -y
+   conda activate fusion
+   ```
 
-:: 3) 装其余依赖
-F:\anaconda3\envs\fusion\python.exe -m pip install -r F:\Radar-Camera-Fusion\env\requirements.txt
-```
+2. Install PyTorch 2.5.1 and torchvision 0.20.1. For NVIDIA CUDA 12.4:
 
-装完运行自检确认：
+   ```bat
+   python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+   ```
 
-```bat
-F:\anaconda3\envs\fusion\python.exe F:\Radar-Camera-Fusion\tools\check_env.py
-```
+   On non-CUDA Windows machines, install the corresponding **CPU wheels**
+   instead. The app can be slower on CPU; the GPU check in `tools/check_env.py`
+   reports CUDA absence as a failure.
 
-## 版本约束（不要随意升级）
+3. Install the remaining packages from the repository root:
 
-| 组件 | 版本 | 原因 |
+   ```bat
+   python -m pip install -r env\requirements.txt
+   ```
+
+4. Check the environment, then launch the GUI:
+
+   ```bat
+   python tools\check_env.py
+   run.bat
+   ```
+
+## Hardware dependencies
+
+- Camera: a connected USB camera, normally index 0.
+- Radar: the project's 77 GHz radar and compatible ZLG USB-to-CAN interface.
+- Vendor runtime: `driver/zlgcan.dll` **and** its accompanying
+  `driver/kerneldlls/` directory. Keep them together.
+- Calibration: `config/calibration_data.json` reflects the original
+  test setup; real deployments require calibration for the actual camera and mount.
+
+## Compatibility notes
+
+| Package | Known development version | Reason |
 | --- | --- | --- |
-| torch / torchvision | 2.5.1 / 0.20.1 (+cu124) | torch ≥ 2.6 把 `torch.load` 默认值改成 `weights_only=True`，与 ultralytics 8.2.40 不兼容，加载权重会报错 |
-| ultralytics | 8.2.40 | 与项目内原有 YOLOv8 源码（archive\ultralytics-main）同版本，行为一致 |
-| lapx | 0.5.2+ | `model.track()` 跟踪必需；Ultralytics 的自动安装可能装到别的解释器里，务必手动确认装进本环境 |
-| numpy | 1.26.4 | 与 torch 2.5.1、opencv 4.10、ultralytics 8.2.40 组合最稳；不要升到 2.x |
-| PyQt5 | 5.15.11 | matplotlib 的 Qt5Agg 后端依赖它绘制雷达散点图 |
-| opencv-python | 4.10.0.84 | 相机读取、去畸变、投影与绘图 |
+| Python | 3.10 x64 | Supported interpreter for the included Windows driver |
+| PyTorch | 2.5.1 | Avoids the changed torch.load default in newer versions with Ultralytics 8.2.40 |
+| torchvision | 0.20.1 | Matching PyTorch version |
+| ultralytics | 8.2.40 | YOLOv8 inference and tracking |
+| OpenCV | 4.10.0.84 | Frame acquisition, camera calibration and projection |
+| PyQt5 | 5.15.11 | GUI and worker threads |
+| NumPy | 1.26.4 | Known compatibility with the pinned stack |
+
+The CI unit tests exercise the radar protocol only, using standard-library
+modules and no physical hardware. They do **not** validate the camera model,
+vendor driver or real-time performance.
+
+## Non-hardware tests
+
+```bat
+python -m unittest discover -s tests -v
+```
