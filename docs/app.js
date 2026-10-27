@@ -3,43 +3,42 @@
  */
 "use strict";
 
+// Hand-placed cow annotations on Abdou's static Unsplash pasture photograph.
+// Locations are illustrative; none of these boxes was produced by YOLO.
 const BASE_DETECTIONS = [
-  { id: "C01", label: "car", center: [270, 390], size: [132, 129], conf: 0.95 },
-  { id: "C02", label: "car", center: [551, 463], size: [146, 168], conf: 0.91 },
-  { id: "C03", label: "car", center: [725, 295], size: [86, 98], conf: 0.92 },
-  { id: "C04", label: "car", center: [436, 341], size: [80, 88], conf: 0.87 },
-  { id: "C05", label: "person", center: [809, 401], size: [65, 142], conf: 0.84 }
+  { id: "C01", label: "cow", center: [272, 507], size: [125, 155] },
+  { id: "C02", label: "cow", center: [708, 511], size: [145, 136] },
+  { id: "C03", label: "cow", center: [820, 530], size: [116, 146] }
 ];
+// Independent synthetic returns, NOT collected alongside the pasture photo.
+// 3 near three illustrative cows + 1 intentionally unassociated radar return.
 const BASE_RETURNS = [
-  { id: "R01", lateral: -1.55, range: 7.52, velocity: -2.40 },
-  { id: "R02", lateral: 0.10, range: 5.11, velocity: 3.70 },
-  { id: "R03", lateral: 3.30, range: 17.90, velocity: -1.65 },
-  { id: "R04", lateral: -0.45, range: 10.90, velocity: 1.25 },
-  { id: "R05", lateral: 4.90, range: 8.00, velocity: -0.30 }
+  { id: "R01", lateral: -1.06, range: 4.33, velocity: -0.12 },
+  { id: "R02", lateral: 0.94, range: 4.22, velocity: 0.08 },
+  { id: "R03", lateral: 1.52, range: 4.03, velocity: -0.06 },
+  { id: "R04", lateral: -3.65, range: 10.5, velocity: 0.00 }
 ];
 const FRAME_COUNT = 6;
 const CAMERA_WIDTH = 1000;
 const CAMERA_HEIGHT = 620;
-const PHOTO_CREDIT = "Carlos Felipe Ramírez Mesa / Unsplash (Unsplash License)";
+const PHOTO_CREDIT = "Abdou / Unsplash (Unsplash License; photo Oql56ssll_c)";
 const $ = id => document.getElementById(id);
 const state = { frame: 0, gate: 80, dx: 0, dy: 0, selected: null, playing: false, timer: null };
 
 function getFrame(index) {
   const phase = Number(index);
-  const detections = BASE_DETECTIONS.map((item, i) => ({
-    ...item,
-    center: [
-      item.center[0] + Math.round(phase * (i % 2 === 0 ? 5 : -6)),
-      item.center[1] + Math.round(phase * (i % 2 === 0 ? 2 : -3))
-    ]
+  // The source photograph is STATIC: camera annotations must not move.
+  // Sampling changes represent synthetic radar jitter, not observed motion.
+  const detections = BASE_DETECTIONS.map(item => ({
+    ...item, center: item.center.slice(), size: item.size.slice()
   }));
   const radar = BASE_RETURNS.map((item, i) => ({
     ...item,
-    lateral: Number((item.lateral + phase * ((i % 2 === 0 ? 0.06 : -0.05))).toFixed(2)),
-    range: Number((item.range + phase * ((i % 2 === 0 ? -0.13 : 0.10))).toFixed(2)),
-    velocity: Number((item.velocity + phase * ((i % 2 === 0 ? 0.14 : -0.11))).toFixed(2))
+    lateral: Number((item.lateral + Math.sin(phase * 1.2 + i) * 0.018).toFixed(3)),
+    range: Number((item.range + Math.sin(phase * 0.8 + i * 1.7) * 0.042).toFixed(3)),
+    velocity: Number((item.velocity + Math.cos(phase * 0.7 + i) * 0.035).toFixed(2))
   }));
-  return { frame: index + 1, timeSeconds: Number((phase * 0.12).toFixed(2)), detections, radar };
+  return { frame: index + 1, timeSeconds: Number((phase * 0.20).toFixed(2)), detections, radar };
 }
 function projectRadar(target) {
   // Simplified pinhole-style projection in an illustrative normalized canvas;
@@ -103,7 +102,7 @@ function drawCamera(frame, projected, matches) {
     box.setAttribute("aria-label", det.id + ": simulated " + det.label + ", " + (associated ? "radar match " + associated.radar : "unmatched") + "; inspect");
     box.addEventListener("click", () => selectDetection(det.id));
     if (showLabels) {
-      const label = createElement("span", "detection-label", det.id + " / " + det.label + " " + rounded(det.conf, 2) +
+      const label = createElement("span", "detection-label", det.id + " / " + det.label +
         (associated ? " · " + showSigned(associated.target.velocity) + " m/s" : " · NO RADAR"));
       box.appendChild(label);
     }
@@ -202,7 +201,7 @@ function drawRadar(frame, matches) {
 function render() {
   const frame = getFrame(state.frame);
   const { projected, matches } = calculateMatches(frame);
-  $("frame-label").textContent = "FRAME " + String(frame.frame).padStart(2, "0") + " / " + String(FRAME_COUNT).padStart(2, "0");
+  $("frame-label").textContent = "SAMPLE " + String(frame.frame).padStart(2, "0") + " / " + String(FRAME_COUNT).padStart(2, "0");
   $("time-code").textContent = "SIM T+" + rounded(frame.timeSeconds, 2) + "s";
   $("matched-stat").textContent = String(matches.size).padStart(2, "0");
   $("unmatched-stat").textContent = String(frame.detections.length - matches.size).padStart(2, "0");
@@ -222,14 +221,14 @@ function stopPlayback() {
   if (state.timer !== null) clearInterval(state.timer);
   state.timer = null; state.playing = false;
   $("play-icon").textContent = "▶";
-  $("play-label").textContent = "Play";
-  $("play").setAttribute("aria-label", "Play simulated frames");
+  $("play-label").textContent = "Play samples";
+  $("play").setAttribute("aria-label", "Play synthetic radar samples");
 }
 function togglePlayback() {
   if (state.playing) { stopPlayback(); return; }
   state.playing = true;
   $("play-icon").textContent = "Ⅱ"; $("play-label").textContent = "Pause";
-  $("play").setAttribute("aria-label", "Pause simulated frames");
+  $("play").setAttribute("aria-label", "Pause synthetic radar samples");
   state.timer = setInterval(() => moveFrame(1), 1100);
 }
 function exportCurrent() {
@@ -238,9 +237,11 @@ function exportCurrent() {
   const payload = {
     metadata: {
       kind: "SIMULATED_INTERACTIVE_DEMO",
-      warning: "No synchronized sensor data or YOLO inference. Do not use as measured results.",
+      warning: "Real static cattle photograph; hand-annotated boxes; independently simulated radar readings and velocities. No synchronized data or YOLO inference.",
       frame: frame.frame, timeSeconds: frame.timeSeconds,
       visualAsset: PHOTO_CREDIT,
+      photoIsStatic: true,
+      detectionBoxesAreHandAnnotated: true,
       projection: "illustrative pinhole-style normalization: u=500+920*X/Z+offsetX; v=230+1200/Z+offsetY",
       association: "global-greedy-nearest-pair, single radar return per detection",
       matchingThresholdPixels: state.gate,
@@ -255,7 +256,7 @@ function exportCurrent() {
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
   const a = createElement("a");
-  a.href = url; a.download = "radar-camera-demo-frame-" + frame.frame + ".json";
+  a.href = url; a.download = "pasture-radar-synthetic-sample-" + frame.frame + ".json";
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
