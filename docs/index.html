@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#101010">
-  <meta name="description" content="Interactive, clearly labeled camera–radar fusion concept demo: explore synthetic radar targets over a real licensed photograph, sensor projection, and nearest-neighbor association.">
+  <meta name="description" content="Explore illustrative radar associations with hand-annotated cattle on a licensed pasture photograph. Synthetic demo data, not field measurements.">
   <title>Radar × Camera | Interactive Fusion Lab</title>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="style.css?v=overlay-transparent-20261027">
@@ -27,12 +27,12 @@
         <div class="hero-copy">
           <div class="eyebrow"><span class="live-dot"></span> INTERACTIVE RESEARCH EXHIBIT <span class="eyebrow-divider">/</span> SENSOR PERCEPTION</div>
           <h1>See what a camera sees.<br><em>Know what radar knows.</em></h1>
-          <p class="hero-intro">An interactive explanation of projecting radar returns into an image and associating them with visual detections. Step through example frames, tune the matching threshold, and intentionally perturb calibration.</p>
+          <p class="hero-intro">Explore a natural pasture scenario: a real photograph anchors the scene while synthetic radar samples demonstrate projection, gating, and association. Adjust the matching threshold and see how calibration offsets affect the result.</p>
           <div class="hero-actions">
             <a class="action-primary" href="#workspace">Launch the workbench <span aria-hidden="true">↗</span></a>
             <a class="action-secondary" href="https://github.com/choppa129/Radar-Camera-Fusion" target="_blank" rel="noopener noreferrer">Explore the actual Python project ↗</a>
           </div>
-          <div class="truth-strip"><span class="truth-icon">i</span><span><strong>Transparent demo:</strong> the photograph is real and licensed; bounding boxes, radar readings, and associations are <strong>simulated</strong>. This is not a synchronized sensor capture or a YOLO inference result.</span></div>
+          <div class="truth-strip"><span class="truth-icon">i</span><span><strong>Transparent demo:</strong> the pasture photograph is real and licensed. Cattle boxes are hand-annotated; radar readings and associations are <strong>simulated</strong>. The photo stays fixed through the six radar samples. No synchronized data or YOLO inference.</span></div>
         </div>
         <div class="hero-decoration" aria-hidden="true"><span class="hero-arc hero-arc-one"></span><span class="hero-arc hero-arc-two"></span><span class="hero-arc hero-arc-three"></span><span class="hero-cross">+</span><span class="hero-num">77<span>GHz</span></span><div class="hero-decoration-label">VISION / RANGE / VELOCITY</div></div>
       </section>
@@ -48,28 +48,28 @@
             <div class="bench-toolbar">
               <div class="bench-label"><span class="dot-cyan"></span> SENSOR VIEW <span class="tag">ILLUSTRATIVE DATA</span></div>
               <div class="transport">
-                <span id="frame-label" class="frame-count" aria-live="polite">FRAME 01 / 06</span>
+                <span id="frame-label" class="frame-count" aria-live="polite">SAMPLE 01 / 06</span>
                 <button id="prev" class="transport-btn" type="button" aria-label="Previous frame" title="Previous frame">‹</button>
-                <button id="play" class="transport-btn play-btn" type="button" aria-label="Play simulated frames"><span id="play-icon">▶</span><span id="play-label">Play</span></button>
+                <button id="play" class="transport-btn play-btn" type="button" aria-label="Play simulated frames"><span id="play-icon">▶</span><span id="play-label">Play samples</span></button>
                 <button id="next" class="transport-btn" type="button" aria-label="Next frame" title="Next frame">›</button>
               </div>
             </div>
 
             <div class="views">
               <div class="camera-panel">
-                <div class="panel-heading"><span>CAM_01 <span class="sep">/</span> IMAGE-SPACE ASSOCIATION</span><span class="view-label"><span class="tiny-pulse"></span> RGB REFERENCE PHOTO</span></div>
+                <div class="panel-heading"><span>CAM_01 <span class="sep">/</span> IMAGE-SPACE ASSOCIATION</span><span class="view-label"><span class="tiny-pulse"></span> PASTURE PHOTOGRAPH</span></div>
                 <div class="camera-stage" id="camera-stage">
-                  <img id="scene-photo" alt="Licensed photograph of real road traffic, used as a static background for simulated detection overlays" src="https://images.unsplash.com/photo-1663162142127-23b8710d270c?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;w=1400&amp;h=868&amp;q=85" referrerpolicy="no-referrer">
+                  <img id="scene-photo" alt="Natural pasture photo by Abdou with grazing cows; colored detection outlines and radar readings are hand-authored educational overlays" src="https://images.unsplash.com/photo-1622407890356-e00e4f11277c?auto=format&amp;fit=crop&amp;w=1400&amp;h=868&amp;q=85" referrerpolicy="no-referrer">
                   <div class="image-fallback" id="photo-fallback">Background photo unavailable. Synthetic overlay demo still works.</div>
                   <svg id="match-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"></svg>
                   <div id="radar-projections" aria-hidden="true"></div>
                   <div id="det-boxes"></div>
                   <div class="image-hud top-left">CAM/01 <b>640×480</b> · CONCEPT VIEW</div>
                   <div class="image-hud top-right" id="time-code">SIM T+0.00s</div>
-                  <div class="image-hud bottom-left"><span class="hud-green"></span> RGB STILL · SYNTHETIC DETECTIONS</div>
-                  <div class="image-hud bottom-right">SIMULATED OVERLAYS</div>
+                  <div class="image-hud bottom-left"><span class="hud-green"></span> REAL PASTURE STILL · ILLUSTRATIVE COW BOXES</div>
+                  <div class="image-hud bottom-right">SYNTHETIC RADAR SAMPLES</div>
                 </div>
-                <div class="camera-footer"><div class="legend"><span><i class="legend-line"></i> Associated detection</span><span><i class="legend-line unmatched"></i> Unmatched detection</span><span><i class="legend-mark"></i> Projected radar point</span></div><a href="https://unsplash.com/photos/a-busy-street-with-traffic-hjCcMtkcwxM" target="_blank" rel="noopener noreferrer" class="photo-credit">Photo: Carlos Felipe Ramírez Mesa / Unsplash ↗</a></div>
+                <div class="camera-footer"><div class="legend"><span><i class="legend-line"></i> Associated detection</span><span><i class="legend-line unmatched"></i> Unmatched detection</span><span><i class="legend-mark"></i> Projected radar point</span></div><a href="https://unsplash.com/photos/brown-cow-on-green-grass-field-during-daytime-Oql56ssll_c" target="_blank" rel="noopener noreferrer" class="photo-credit">Photo: Abdou / Unsplash ↗</a></div>
               </div>
 
               <div class="radar-panel">
@@ -93,7 +93,7 @@
           <div class="lower">
             <section class="control-card" aria-labelledby="controls-title">
               <div class="card-top"><div><div class="kicker">02 / CALIBRATION PLAYGROUND</div><h3 id="controls-title">Adjust the fusion logic</h3></div><button class="reset" id="reset" type="button">↺ Reset</button></div>
-              <p class="helper">Each control recomputes the associations in real time. The horizontal and vertical offsets imitate calibration error in <em>projected image coordinates</em>; they are not physical extrinsic parameters.</p>
+              <p class="helper">Cattle annotations stay fixed on the photograph. The sliders perturb synthetic radar projections to show how calibration errors affect associations; offsets are illustrative image pixels, not real extrinsics.</p>
               <div class="sliders">
                 <label class="slider-row" for="gate"><span class="slider-title">Association gate <span class="slider-unit">(px)</span></span><output id="gate-output" for="gate">80</output><input type="range" id="gate" min="10" max="175" step="5" value="80"><span class="slider-extremes"><span>Strict matching</span><span>Permissive matching</span></span></label>
                 <label class="slider-row" for="offset-x"><span class="slider-title">Projection X offset <span class="slider-unit">(px)</span></span><output id="offset-x-output" for="offset-x">+0</output><input type="range" id="offset-x" min="-180" max="180" step="5" value="0"><span class="slider-extremes"><span>← Left</span><span>Right →</span></span></label>
@@ -105,7 +105,7 @@
               <div class="card-top"><div><div class="kicker">03 / MATCH ANALYSIS</div><h3 id="associations-title">Associated objects</h3></div><button class="export-btn" id="export" type="button">↓ Export frame JSON</button></div>
               <p class="helper">Associations use global greedy one-to-one nearest-pair matching. Click a row or bounding box to inspect a target.</p>
               <div class="table-container"><table><thead><tr><th>CAMERA</th><th>RADAR</th><th>RANGE</th><th>RADIAL VEL.</th><th>ERROR</th></tr></thead><tbody id="match-table"><tr><td colspan="5">Loading simulated frame…</td></tr></tbody></table></div>
-              <div class="table-foot">Illustrative sensor values only · No synchronized measurements · No model inference in browser · <a href="data/demo-sequence.json" download>Download the complete 6-frame JSON dataset ↗</a></div>
+              <div class="table-foot">Real static pasture photo · Hand-drawn cow boxes · Synthetic radar · No model inference · <a href="data/demo-sequence.json" download>Download the complete 6-frame JSON dataset ↗</a></div>
             </section>
           </div>
         </div>
@@ -114,14 +114,14 @@
       <section class="how-section wrap" id="how-it-works">
         <div class="section-head"><div><div class="kicker">04 / UNDER THE HOOD</div><h2>From two sensors to <span>one understanding.</span></h2></div></div>
         <div class="steps">
-          <article class="step"><span class="step-number">01 / VISION</span><h3>Detect</h3><p>The original Python application uses YOLOv8 to locate visual targets. This web demo substitutes <strong>hand-authored illustrative boxes</strong> so it can run without a model or camera.</p><span class="step-deco">[x, y, w, h]</span></article>
+          <article class="step"><span class="step-number">01 / VISION</span><h3>Detect</h3><p>The actual Python application uses YOLOv8. This nature demo instead places <strong>hand-authored cattle boxes</strong> on a real pasture photograph; no detection model runs in the browser.</p><span class="step-deco">cow boxes · illustrative</span></article>
           <article class="step"><span class="step-number">02 / GEOMETRY</span><h3>Project</h3><p>Measured radar-space positions map into the camera using calibration. Here, a <strong>simplified pinhole-style mapping</strong> illustrates the idea, with editable image-space offsets.</p><span class="step-deco">u = cₓ + fₓ·X/Z</span></article>
           <article class="step"><span class="step-number">03 / FUSION</span><h3>Associate</h3><p>Compute distances between visual centers and projected returns. A nearest-neighbor gate accepts only nearby matches. Click a box to see which radar target supplies its velocity.</p><span class="step-deco">d ≤ threshold</span></article>
         </div>
       </section>
 
       <section class="source-section" id="datasets"><div class="wrap source-grid">
-        <div class="source-copy"><div class="kicker">05 / DATA INTEGRITY</div><h2>Real visual references.<br><span>Clearly simulated fusion.</span></h2><p>This demo is an educational visualization of a real engineering approach. The camera photo and the independent research radar image below are genuine published assets, but <strong>they were not collected together</strong>. Overlay boxes and target telemetry are synthesized for interaction and should never be treated as experimental evidence.</p><ul class="source-list"><li><b>Road photograph</b> — Carlos Felipe Ramírez Mesa, <a href="https://unsplash.com/photos/a-busy-street-with-traffic-hjCcMtkcwxM" target="_blank" rel="noopener noreferrer">Unsplash</a>; used under the <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">Unsplash License</a>.</li><li><b>Radar reference</b> — <a href="https://github.com/yujheli/Pitt-Radar" target="_blank" rel="noopener noreferrer">Pitt-Radar</a>, Li et al. (CVPR 2023). Its radar dataset is MIT-licensed; image is an <em>independent research example</em>, not the source of this demo's target values.</li><li><b>Demo frames</b> — original hand-authored synthetic values and bounding boxes, freely inspectable via Export frame JSON and <a href="https://github.com/choppa129/Radar-Camera-Fusion/tree/main/docs" target="_blank" rel="noopener noreferrer">the demo source code</a>.</li></ul></div>
+        <div class="source-copy"><div class="kicker">05 / DATA INTEGRITY</div><h2>Real visual references.<br><span>Clearly simulated fusion.</span></h2><p>This livestock-themed teaching demo is not a field trial. The pasture photograph and the independent radar reference are genuine public media, but <strong>they were not collected together</strong>. Cow boxes are manually placed on a fixed image and all radar target telemetry is simulated.</p><ul class="source-list"><li><b>Pasture photograph</b> — Abdou, <a href="https://unsplash.com/photos/brown-cow-on-green-grass-field-during-daytime-Oql56ssll_c" target="_blank" rel="noopener noreferrer">Unsplash</a>; used under the <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">Unsplash License</a>.</li><li><b>Radar reference</b> — <a href="https://github.com/yujheli/Pitt-Radar" target="_blank" rel="noopener noreferrer">Pitt-Radar</a>, Li et al. (CVPR 2023). Its radar dataset is MIT-licensed; image is an <em>independent research example</em>, not the source of this demo's target values.</li><li><b>Demo frames</b> — original hand-authored synthetic values and bounding boxes, freely inspectable via Export frame JSON and <a href="https://github.com/choppa129/Radar-Camera-Fusion/tree/main/docs" target="_blank" rel="noopener noreferrer">the demo source code</a>.</li></ul></div>
         <div class="reference-card"><div class="reference-top"><span>REFERENCE / ACTUAL RADAR IMAGE</span><span>NOT PAIRED WITH CAMERA PHOTO</span></div><div class="reference-image"><img loading="lazy" src="https://raw.githubusercontent.com/yujheli/Pitt-Radar/main/radar_sample.png" alt="Genuine radar visualization provided in the Pitt-Radar research repository; this image is unrelated to the simulated fusion overlay" referrerpolicy="no-referrer"></div><div class="reference-bottom"><div><strong>Pitt-Radar</strong><span>Independent FMCW radar dataset example</span></div><a href="https://github.com/yujheli/Pitt-Radar/blob/main/radar_sample.png" target="_blank" rel="noopener noreferrer">View original ↗</a></div></div>
       </div></section>
 
