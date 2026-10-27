@@ -1,12 +1,23 @@
 @echo off
-chcp 65001 >nul
-REM Fusion 启动脚本：激活 conda 环境并运行主程序
-call "F:\anaconda3\Scripts\activate.bat" "F:\anaconda3\envs\fusion"
+setlocal
 cd /d "%~dp0"
-echo 启动 Fusion 主程序...
-python "%~dp0src\detect.py"
+
+REM Run from Anaconda Prompt (Windows x64); no machine-specific F:\ paths.
+where conda >nul 2>nul
 if errorlevel 1 (
-    echo.
-    echo 程序异常退出。可先运行自检:  python "%~dp0tools\check_env.py"
+    echo Conda was not found. Open Anaconda Prompt and retry.
+    exit /b 1
+)
+call conda activate fusion
+if errorlevel 1 (
+    echo Could not activate environment "fusion".
+    echo See env\README.md for the installation steps.
+    exit /b 1
+)
+python "src\detect.py"
+set "status=%errorlevel%"
+if not "%status%"=="0" (
+    echo The application exited with an error. Try: python tools\check_env.py
     pause
 )
+exit /b %status%
