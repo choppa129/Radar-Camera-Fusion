@@ -1,16 +1,18 @@
 {
   "metadata": {
-    "dataType": "SYNTHETIC_EDUCATIONAL_DEMO",
+    "dataType": "SYNTHETIC_PASTURE_RADAR_DEMO",
     "notRealMeasurements": true,
     "notYOLOOutput": true,
+    "cameraAnnotationsManuallyPlaced": true,
+    "cameraPhotoStatic": true,
     "synchronizedSensorData": false,
     "frames": 6,
     "fieldTrialEvidence": false,
-    "photo": "Carlos Felipe Ramírez Mesa (Unsplash License): https://unsplash.com/photos/a-busy-street-with-traffic-hjCcMtkcwxM",
-    "radarReference": "Independent published Pitt-Radar sample (not used in simulated values): https://github.com/yujheli/Pitt-Radar",
-    "projection": "Simplified pinhole-style demo coordinates; not the real calibration",
+    "photo": "Abdou / Unsplash License: https://unsplash.com/photos/brown-cow-on-green-grass-field-during-daytime-Oql56ssll_c",
+    "radarReference": "Independent Pitt-Radar example: https://github.com/yujheli/Pitt-Radar",
+    "projection": "Illustrative pinhole-style camera coordinates; not measured extrinsics",
     "defaultGatePixels": 80,
-    "units": "radar range/lateral in meters; radial velocity in m/s; visual coords in conceptual 1000x620 pixel grid"
+    "units": "radar range/lateral in meters; radial velocity in m/s; 1000x620 conceptual pixel grid"
   },
   "frames": [
     {
@@ -19,747 +21,507 @@
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            270,
-            390
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            551,
-            463
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            725,
-            295
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            436,
-            341
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            809,
-            401
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.55,
-          "range": 7.52,
-          "velocity": -2.4
+          "lateral": -1.06,
+          "range": 4.33,
+          "velocity": -0.08
         },
         {
           "id": "R02",
-          "lateral": 0.1,
-          "range": 5.11,
-          "velocity": 3.7
+          "lateral": 0.955,
+          "range": 4.262,
+          "velocity": 0.1
         },
         {
           "id": "R03",
-          "lateral": 3.3,
-          "range": 17.9,
-          "velocity": -1.65
+          "lateral": 1.536,
+          "range": 4.019,
+          "velocity": -0.07
         },
         {
           "id": "R04",
-          "lateral": -0.45,
-          "range": 10.9,
-          "velocity": 1.25
-        },
-        {
-          "id": "R05",
-          "lateral": 4.9,
-          "range": 8,
-          "velocity": -0.3
+          "lateral": -3.647,
+          "range": 10.461,
+          "velocity": -0.03
         }
       ],
       "associations": [
         {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 26.03
-        },
-        {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 33.05
+          "pixelError": 1.93
         },
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 40.37
+          "pixelError": 2.78
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 55.43
+          "pixelError": 31.64
         }
       ]
     },
     {
       "frame": 2,
-      "timeSeconds": 0.12,
+      "timeSeconds": 0.2,
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            275,
-            392
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            545,
-            460
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            730,
-            297
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            430,
-            338
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            814,
-            403
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.49,
-          "range": 7.39,
-          "velocity": -2.26
+          "lateral": -1.043,
+          "range": 4.36,
+          "velocity": -0.09
         },
         {
           "id": "R02",
-          "lateral": 0.05,
-          "range": 5.21,
-          "velocity": 3.59
+          "lateral": 0.955,
+          "range": 4.245,
+          "velocity": 0.08
         },
         {
           "id": "R03",
-          "lateral": 3.36,
-          "range": 17.77,
-          "velocity": -1.51
+          "lateral": 1.519,
+          "range": 3.993,
+          "velocity": -0.09
         },
         {
           "id": "R04",
-          "lateral": -0.5,
-          "range": 11,
-          "velocity": 1.14
-        },
-        {
-          "id": "R05",
-          "lateral": 4.96,
-          "range": 7.87,
-          "velocity": -0.16
+          "lateral": -3.666,
+          "range": 10.484,
+          "velocity": -0.03
         }
       ],
       "associations": [
         {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 28.2
-        },
-        {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 36.17
+          "pixelError": 1.97
         },
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 39.51
+          "pixelError": 8.11
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 56.05
+          "pixelError": 29.99
         }
       ]
     },
     {
       "frame": 3,
-      "timeSeconds": 0.24,
+      "timeSeconds": 0.4,
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            280,
-            394
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            539,
-            457
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            735,
-            299
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            424,
-            335
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            819,
-            405
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.43,
-          "range": 7.26,
-          "velocity": -2.12
+          "lateral": -1.048,
+          "range": 4.372,
+          "velocity": -0.11
         },
         {
           "id": "R02",
-          "lateral": 0,
-          "range": 5.31,
-          "velocity": 3.48
+          "lateral": 0.935,
+          "range": 4.213,
+          "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 3.42,
-          "range": 17.64,
-          "velocity": -1.37
+          "lateral": 1.503,
+          "range": 3.99,
+          "velocity": -0.09
         },
         {
           "id": "R04",
-          "lateral": -0.55,
-          "range": 11.1,
-          "velocity": 1.03
-        },
-        {
-          "id": "R05",
-          "lateral": 5.02,
-          "range": 7.74,
-          "velocity": -0.02
+          "lateral": -3.664,
+          "range": 10.517,
+          "velocity": -0.01
         }
       ],
       "associations": [
         {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 30.57
+          "detectionId": "C02",
+          "radarId": "R02",
+          "pixelError": 5.41
         },
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 38.81
-        },
-        {
-          "detectionId": "C02",
-          "radarId": "R02",
-          "pixelError": 39.01
+          "pixelError": 7.88
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 56.64
+          "pixelError": 26.57
         }
       ]
     },
     {
       "frame": 4,
-      "timeSeconds": 0.36,
+      "timeSeconds": 0.6,
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            285,
-            396
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            533,
-            454
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            740,
-            301
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            418,
-            332
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            824,
-            407
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.37,
-          "range": 7.13,
-          "velocity": -1.98
+          "lateral": -1.068,
+          "range": 4.358,
+          "velocity": -0.14
         },
         {
           "id": "R02",
-          "lateral": -0.05,
-          "range": 5.41,
-          "velocity": 3.37
+          "lateral": 0.922,
+          "range": 4.186,
+          "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 3.48,
-          "range": 17.51,
-          "velocity": -1.23
+          "lateral": 1.509,
+          "range": 4.01,
+          "velocity": -0.08
         },
         {
           "id": "R04",
-          "lateral": -0.6,
-          "range": 11.2,
-          "velocity": 0.92
-        },
-        {
-          "id": "R05",
-          "lateral": 5.08,
-          "range": 7.61,
-          "velocity": 0.12
+          "lateral": -3.644,
+          "range": 10.539,
+          "velocity": 0.01
         }
       ],
       "associations": [
         {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 33.12
-        },
-        {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 38.3
+          "pixelError": 3.02
         },
         {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 41.56
+          "pixelError": 7.8
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 57.21
+          "pixelError": 26.22
         }
       ]
     },
     {
       "frame": 5,
-      "timeSeconds": 0.48,
+      "timeSeconds": 0.8,
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            290,
-            398
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            527,
-            451
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            745,
-            303
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            412,
-            329
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            829,
-            409
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.31,
-          "range": 7,
-          "velocity": -1.84
+          "lateral": -1.078,
+          "range": 4.328,
+          "velocity": -0.15
         },
         {
           "id": "R02",
-          "lateral": -0.1,
-          "range": 5.51,
-          "velocity": 3.26
+          "lateral": 0.932,
+          "range": 4.179,
+          "velocity": 0.05
         },
         {
           "id": "R03",
-          "lateral": 3.54,
-          "range": 17.38,
-          "velocity": -1.09
+          "lateral": 1.529,
+          "range": 4.043,
+          "velocity": -0.06
         },
         {
           "id": "R04",
-          "lateral": -0.65,
-          "range": 11.3,
-          "velocity": 0.81
-        },
-        {
-          "id": "R05",
-          "lateral": 5.14,
-          "range": 7.48,
-          "velocity": 0.26
+          "lateral": -3.632,
+          "range": 10.538,
+          "velocity": 0.03
         }
       ],
       "associations": [
         {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 35.81
-        },
-        {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 37.98
+          "pixelError": 1.18
         },
         {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 43.81
+          "pixelError": 6.77
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 57.75
+          "pixelError": 28.11
         }
       ]
     },
     {
       "frame": 6,
-      "timeSeconds": 0.6,
+      "timeSeconds": 1,
       "detections": [
         {
           "id": "C01",
-          "label": "car",
+          "label": "cow",
           "center": [
-            295,
-            400
+            272,
+            507
           ],
           "size": [
-            132,
-            129
-          ],
-          "conf": 0.95
+            125,
+            155
+          ]
         },
         {
           "id": "C02",
-          "label": "car",
+          "label": "cow",
           "center": [
-            521,
-            448
+            708,
+            511
           ],
           "size": [
-            146,
-            168
-          ],
-          "conf": 0.91
+            145,
+            136
+          ]
         },
         {
           "id": "C03",
-          "label": "car",
+          "label": "cow",
           "center": [
-            750,
-            305
+            820,
+            530
           ],
           "size": [
-            86,
-            98
-          ],
-          "conf": 0.92
-        },
-        {
-          "id": "C04",
-          "label": "car",
-          "center": [
-            406,
-            326
-          ],
-          "size": [
-            80,
-            88
-          ],
-          "conf": 0.87
-        },
-        {
-          "id": "C05",
-          "label": "person",
-          "center": [
-            834,
-            411
-          ],
-          "size": [
-            65,
-            142
-          ],
-          "conf": 0.84
+            116,
+            146
+          ]
         }
       ],
       "radar": [
         {
           "id": "R01",
-          "lateral": -1.25,
-          "range": 6.87,
-          "velocity": -1.7
+          "lateral": -1.065,
+          "range": 4.298,
+          "velocity": -0.15
         },
         {
           "id": "R02",
-          "lateral": -0.15,
-          "range": 5.61,
-          "velocity": 3.15
+          "lateral": 0.952,
+          "range": 4.197,
+          "velocity": 0.07
         },
         {
           "id": "R03",
-          "lateral": 3.6,
-          "range": 17.25,
-          "velocity": -0.95
+          "lateral": 1.538,
+          "range": 4.068,
+          "velocity": -0.04
         },
         {
           "id": "R04",
-          "lateral": -0.7,
-          "range": 11.4,
-          "velocity": 0.7
-        },
-        {
-          "id": "R05",
-          "lateral": 5.2,
-          "range": 7.35,
-          "velocity": 0.4
+          "lateral": -3.643,
+          "range": 10.513,
+          "velocity": 0.03
         }
       ],
       "associations": [
         {
           "detectionId": "C01",
           "radarId": "R01",
-          "pixelError": 37.89
-        },
-        {
-          "detectionId": "C04",
-          "radarId": "R04",
-          "pixelError": 38.64
+          "pixelError": 2.2
         },
         {
           "detectionId": "C02",
           "radarId": "R02",
-          "pixelError": 45.78
+          "pixelError": 4.97
         },
         {
           "detectionId": "C03",
           "radarId": "R03",
-          "pixelError": 58.25
+          "pixelError": 28.28
         }
       ]
     }
