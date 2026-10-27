@@ -280,3 +280,11 @@ html,body,.site,.hero,.workbench-section,.how-section,.source-section,.cta-secti
   padding:0;
   box-shadow:none;
 }
+
+
+/* Keep photograph and 1000x620 annotation coordinates aligned at ALL
+   breakpoints. Mobile previously applied a 1000/700 crop, moving the cows
+   relative to their manually placed bounding boxes. */
+.camera-stage{aspect-ratio:1000 / 620}
+.camera-stage img{object-fit:cover;object-position:50% 50%}
+@media(max-width:560px){.camera-stage{aspect-ratio:1000 / 620}}
