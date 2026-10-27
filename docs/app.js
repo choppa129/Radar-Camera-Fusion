@@ -6,21 +6,22 @@
 // Hand-placed cow annotations on Abdou's static Unsplash pasture photograph.
 // Locations are illustrative; none of these boxes was produced by YOLO.
 const BASE_DETECTIONS = [
-  { id: "C01", label: "cow", center: [272, 507], size: [125, 155] },
-  { id: "C02", label: "cow", center: [708, 511], size: [145, 136] },
-  { id: "C03", label: "cow", center: [820, 530], size: [116, 146] }
+  { id: "C01", label: "cow", center: [176, 386], size: [45, 62] },
+  { id: "C02", label: "cow", center: [249, 416], size: [139, 110] },
+  { id: "C03", label: "cow", center: [526, 410], size: [85, 103] },
+  { id: "C04", label: "cows", center: [875, 403], size: [163, 88] }
 ];
-// Independent synthetic returns, NOT collected alongside the pasture photo.
-// 3 near three illustrative cows + 1 intentionally unassociated radar return.
+// Four independently simulated radar targets, deliberately near the
+// annotated cattle. Not recorded by a real sensor.
 const BASE_RETURNS = [
-  { id: "R01", lateral: -1.06, range: 4.33, velocity: -0.12 },
-  { id: "R02", lateral: 0.94, range: 4.22, velocity: 0.08 },
-  { id: "R03", lateral: 1.52, range: 4.03, velocity: -0.06 },
-  { id: "R04", lateral: -3.65, range: 10.5, velocity: 0.00 }
+  { id: "R01", lateral: -2.10, range: 8.25, velocity: -0.12 },
+  { id: "R02", lateral: -2.07, range: 6.45, velocity: 0.08 },
+  { id: "R03", lateral: 0.13, range: 6.65, velocity: -0.06 },
+  { id: "R04", lateral: 2.52, range: 6.85, velocity: 0.00 }
 ];
 const FRAME_COUNT = 6;
 const CAMERA_WIDTH = 1000;
-const CAMERA_HEIGHT = 620;
+const CAMERA_HEIGHT = 486.49;
 const PHOTO_CREDIT = "Abdou / Unsplash (Unsplash License; photo Oql56ssll_c)";
 const $ = id => document.getElementById(id);
 const state = { frame: 0, gate: 80, dx: 0, dy: 0, selected: null, playing: false, timer: null };
@@ -44,7 +45,7 @@ function projectRadar(target) {
   // Simplified pinhole-style projection in an illustrative normalized canvas;
   // camera/radar extrinsics and image rectification in the real project differ.
   return {
-    u: 500 + 920 * target.lateral / target.range + state.dx,
+    u: 500 + 1000 * target.lateral / target.range + state.dx,
     v: 230 + 1200 / target.range + state.dy
   };
 }
@@ -242,7 +243,7 @@ function exportCurrent() {
       visualAsset: PHOTO_CREDIT,
       photoIsStatic: true,
       detectionBoxesAreHandAnnotated: true,
-      projection: "illustrative pinhole-style normalization: u=500+920*X/Z+offsetX; v=230+1200/Z+offsetY",
+      projection: "illustrative pinhole-style normalization: u=500+1000*X/Z+offsetX; v=230+1200/Z+offsetY",
       association: "global-greedy-nearest-pair, single radar return per detection",
       matchingThresholdPixels: state.gate,
       offsetX: state.dx, offsetY: state.dy
